@@ -4,7 +4,7 @@ import { API_ENDPOINTS } from '../constants/apiConfig';
 import { useAuth } from '../contexts/ContextsAuth';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
-import AppointmentCard from '../components/Appointment/AppointmentCard';
+import DoctorCard from '../components/Doctor/DoctorCard';
 import { useTranslation } from 'react-i18next';
 
 interface Doctor {
@@ -17,6 +17,7 @@ const DoctorsPage: React.FC = () => {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
     const [search, setSearch] = useState('');
     const [specialtyFilter, setSpecialtyFilter] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
     const { accessToken } = useAuth();
     const { t } = useTranslation();
 
@@ -29,6 +30,10 @@ const DoctorsPage: React.FC = () => {
             .catch((err) => console.error(err));
     }, [accessToken]);
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, specialtyFilter]);
+
     const specialties = Array.from(
         new Set(doctors.map((d) => d.specialty).filter(Boolean))
     ) as string[];
@@ -38,6 +43,10 @@ const DoctorsPage: React.FC = () => {
             d.clinicName.toLowerCase().includes(search.toLowerCase()) &&
             (specialtyFilter === '' || d.specialty === specialtyFilter)
     );
+
+    const start = (currentPage - 1) * 10;
+    const paginatedDoctors = filteredDoctors.slice(start, start + 10);
+    const totalPages = Math.ceil(filteredDoctors.length / 10);
 
     return (
         <div className="min-h-screen bg-white">
@@ -64,13 +73,32 @@ const DoctorsPage: React.FC = () => {
                     </select>
                 </div>
                 <div className="space-y-4">
-                    {filteredDoctors.map((doc) => (
-                        <AppointmentCard
-                            key={doc.id}
-                            doctorId={doc.id.toString()}
-                        />
+                    {paginatedDoctors.map((doc) => (
+                        <DoctorCard key={doc.id} doctorId={doc.id.toString()} />
                     ))}
                 </div>
+
+                {totalPages > 1 && (
+                    <div className="flex justify-center items-center gap-2 mt-4">
+                        <button
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage((p) => p - 1)}
+                            className="px-3 py-1 border rounded disabled:opacity-50"
+                        >
+                            Prev
+                        </button>
+                        <span>
+                            {currentPage} / {totalPages}
+                        </span>
+                        <button
+                            disabled={currentPage === totalPages}
+                            onClick={() => setCurrentPage((p) => p + 1)}
+                            className="px-3 py-1 border rounded disabled:opacity-50"
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
+import { API_ENDPOINTS } from '../../constants/apiConfig';
 
 interface DoctorData {
     id: number;
@@ -16,19 +18,20 @@ interface GroupedSlots {
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const AppointmentCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
+const DoctorCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
+    const navigate = useNavigate();
     const [doctor, setDoctor] = useState<DoctorData | null>(null);
     const [slots, setSlots] = useState<GroupedSlots[]>([]);
     const [showAll, setShowAll] = useState(false);
 
     useEffect(() => {
-        axios
-            .get(`http://localhost:8080/doctors/${doctorId}`)
+        api
+            .get(API_ENDPOINTS.doctor(doctorId))
             .then((res) => setDoctor(res.data))
             .catch((err) => console.error('Doctor fetch error:', err));
 
-        axios
-            .get(`http://localhost:8080/appointments/doctor/${doctorId}/available-slots`)
+        api
+            .get(API_ENDPOINTS.availableSlots(doctorId))
             .then((res) => {
                 const rawSlots: string[] = Array.isArray(res.data) ? res.data : [];
                 const grouped: { [key: string]: string[] } = {};
@@ -64,11 +67,17 @@ const AppointmentCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
         <div className="border rounded-lg shadow-sm flex flex-col md:flex-row p-6 gap-6 bg-white">
             {/* Left: Doctor Info */}
             <div className="flex-1 flex flex-col items-start gap-2">
-                <img
-                    src={doctor.imageUrl || '/placeholder.png'}
-                    alt={doctor.clinicName}
-                    className="h-12 w-12 rounded-full object-cover"
-                />
+                {doctor.imageUrl ? (
+                    <img
+                        src={doctor.imageUrl}
+                        alt={doctor.clinicName}
+                        className="h-12 w-12 rounded-full object-cover"
+                    />
+                ) : (
+                    <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center text-lg font-bold">
+                        {doctor.clinicName.charAt(0)}
+                    </div>
+                )}
                 <p className="font-semibold text-blue-700">{doctor.clinicName}</p>
                 <p className="text-sm text-gray-600">
                     {doctor.specialization.length > 0 ? doctor.specialization.join(', ') : '—'}
@@ -91,6 +100,7 @@ const AppointmentCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
                                 {(showAll ? slot.times : slot.times.slice(0, 5)).map((time, i) => (
                                     <div
                                         key={i}
+                                        onClick={() => navigate(`/book/${doctorId}?slot=${slot.date}T${time}`)}
                                         className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded mb-1 cursor-pointer hover:bg-blue-200"
                                     >
                                         {time}
@@ -119,4 +129,4 @@ const AppointmentCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
     );
 };
 
-export default AppointmentCard;
+export default DoctorCard;
