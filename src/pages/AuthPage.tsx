@@ -1,5 +1,6 @@
 // src/pages/AuthPage.tsx
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { APP_NAME, LOGO_URL } from '../constants/appConfig';
 import LoginForm from '../components/LoginForm';
 import SignupForm from '../components/SignupForm';
@@ -7,6 +8,7 @@ import signupBg from '../assets/signup-bg.jpg';
 
 const AuthPage: React.FC = () => {
     const [mode, setMode] = useState<'login' | 'signup'>('login');
+    const { t } = useTranslation();
 
     return (
         <div className="h-screen grid grid-cols-1 md:grid-cols-2">
@@ -17,9 +19,9 @@ const AuthPage: React.FC = () => {
                         alt="Logo"
                         className="absolute top-4 left-4 h-10 w-auto z-50"
                     />
-                    <h2 className="text-xl text-gray-500">Start your journey</h2>
+                    <h2 className="text-xl text-gray-500">{t('startJourney')}</h2>
                     <h1 className="text-3xl font-bold mb-6">
-                        {mode === 'login' ? 'Sign In to' : 'Sign Up to'} {APP_NAME}
+                        {mode === 'login' ? t('signInTo') : t('signUpTo')} {APP_NAME}
                     </h1>
 
                     {mode === 'login' ? (

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import LabeledInput from './LabeledInput';
 import Button from './Button';
 import {BASE_URL} from "../constants/appConfig";
@@ -8,6 +9,7 @@ type Props = {
 };
 
 const SignupForm: React.FC<Props> = ({ onSwitch }) => {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -63,25 +65,25 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
     return (
         <form onSubmit={handleSignup} className="space-y-4 text-sm">
             <LabeledInput
-                label="Full Name"
+                label={t('fullName')}
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                placeholder="John"
+                placeholder={t('fullName')}
                 inputClassName="py-1.5 text-sm"
             />
 
             <LabeledInput
-                label="Username"
+                label={t('username')}
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder="Username"
+                placeholder={t('username')}
                 inputClassName="py-1.5 text-sm"
             />
 
             <LabeledInput
-                label="Password"
+                label={t('password')}
                 name="password"
                 type="password"
                 value={formData.password}
@@ -93,14 +95,14 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
 
             {passwordTouched && (
                 <ul className="text-xs text-gray-600 pl-5 list-disc space-y-1">
-                    <li className={passwordStatus.length ? 'text-green-600' : ''}>At least 8 characters</li>
-                    <li className={passwordStatus.uppercase ? 'text-green-600' : ''}>At least one uppercase letter</li>
-                    <li className={passwordStatus.number ? 'text-green-600' : ''}>At least one number</li>
+                    <li className={passwordStatus.length ? 'text-green-600' : ''}>{t('passwordLength')}</li>
+                    <li className={passwordStatus.uppercase ? 'text-green-600' : ''}>{t('passwordUppercase')}</li>
+                    <li className={passwordStatus.number ? 'text-green-600' : ''}>{t('passwordNumber')}</li>
                 </ul>
             )}
 
             <LabeledInput
-                label="Re-enter Password"
+                label={t('confirmPassword')}
                 name="confirmPassword"
                 type="password"
                 value={formData.confirmPassword}
@@ -110,27 +112,27 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
             />
 
             <div className="flex flex-col">
-                <label className="text-sm font-medium mb-1">Gender</label>
+                <label className="text-sm font-medium mb-1">{t('gender')}</label>
                 <select
                     name="gender"
                     value={formData.gender}
                     onChange={handleChange}
                     className="w-full px-4 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                 >
-                    <option value="MALE">Male</option>
-                    <option value="FEMALE">Female</option>
+                    <option value="MALE">{t('male')}</option>
+                    <option value="FEMALE">{t('female')}</option>
                 </select>
             </div>
 
 
             <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-                Sign Up
+                {t('signup')}
             </Button>
 
             <p className="text-sm text-center mt-4">
-                Already have an account?{' '}
+                {t('alreadyHaveAccount')} {' '}
                 <button type="button" onClick={onSwitch} className="text-blue-600 hover:underline">
-                    Sign in
+                    {t('signin')}
                 </button>
             </p>
         </form>

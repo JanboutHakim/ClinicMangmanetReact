@@ -21,8 +21,8 @@ const HomePage: React.FC = () => {
             <nav className="flex justify-between items-center px-6 py-4 text-white" style={{ backgroundColor: COLORS.primary }}>
                 <img src={logo} alt="Logo" className="h-8" />
                 <div className="flex items-center space-x-6 text-sm font-medium">
-                    <button className="bg-white text-blue-700 px-3 py-1 rounded-full">Are you a provider?</button>
-                    <a href="#" className="hover:underline">Help Center</a>
+                    <button className="bg-white text-blue-700 px-3 py-1 rounded-full">{t('provider')}</button>
+                    <a href="#" className="hover:underline">{t('help')}</a>
                     <button onClick={toggleLang} className="hover:underline">
                         {i18n.language === 'en' ? 'العربية' : 'English'}
                     </button>
@@ -40,19 +40,19 @@ const HomePage: React.FC = () => {
             {/* Hero Section */}
             <div className="relative bg-blue-600 text-white h-[500px] overflow-hidden">
                 {/* Left Side Content */}
-                <div className="relative z-10 flex flex-col justify-center px-10 py-16 max-w-xl space-y-8">
+                <div className="relative z-10 flex flex-col items-center justify-center text-center px-10 py-16 max-w-2xl mx-auto space-y-8">
                     <h1 className="text-3xl md:text-4xl font-bold">{t('title')}</h1>
 
                     {/* Search bar */}
-                    <div className="flex flex-col md:flex-row bg-white rounded-full overflow-hidden shadow-lg">
+                    <div className="w-full max-w-xl flex flex-col md:flex-row bg-white rounded-full overflow-hidden shadow-lg">
                         <input
                             type="text"
                             placeholder={t('searchPlaceholder')}
-                            className="flex-1 px-4 py-3 text-sm text-gray-700 outline-none"
+                            className="flex-1 px-6 py-4 text-base text-gray-700 outline-none"
                         />
 
                         <button className="bg-blue-900 text-white px-6 py-3 font-semibold hover:bg-blue-800 transition">
-                            Search →
+                            {t('searchButton')}
                         </button>
                     </div>
                 </div>
