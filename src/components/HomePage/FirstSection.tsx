@@ -16,7 +16,7 @@ const FirstSection = () => {
         <div className="relative z-10  pt-32 flex flex-col items-center justify-center text-center px-10 py-16 max-w-2xl mx-auto space-y-8">
             <h1 className="text-3xl md:text-4xl font-bold">{t('title')}</h1>
 
-            <SearchBar/>
+            <SearchBar className="max-w-2xl mt-80 mx-auto" />
 
         </div>
 
