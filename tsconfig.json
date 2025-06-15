@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ES2016",                          // Modern JS features
+    "lib": ["DOM", "ES2015"],                    // Support for DOM APIs and Promises
+    "module": "ESNext",                          // Enable dynamic import, etc.
+    "jsx": "react-jsx",                          // For React 17+ JSX transform
+
+    /* Module Resolution */
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+
+    /* Strict Type Checking */
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    /* Output Settings (optional if no emit) */
+    "noEmit": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
