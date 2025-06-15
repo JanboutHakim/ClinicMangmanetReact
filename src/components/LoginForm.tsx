@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LabeledInput from './LabeledInput';
 import Button from './Button';
-import {BASE_URL} from "../constants/appConfig";
-import {useNavigate} from "react-router-dom";
+import { BASE_URL } from "../constants/apiConfig";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from '../contexts/ContextsAuth';
 type Props = {
     onSwitch: () => void;
 };
@@ -13,6 +14,7 @@ const LoginForm: React.FC<Props> = ({ onSwitch }) => {
     const { t } = useTranslation();
     const [formData, setFormData] = useState({ username: '', password: '' });
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,13 +22,18 @@ const LoginForm: React.FC<Props> = ({ onSwitch }) => {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        await fetch(`${BASE_URL}/auth/login`, {
+        const res = await fetch(`${BASE_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData),
         });
-        navigate("/")
-        alert('Logged in!');
+        if (res.ok) {
+            const data = await res.json();
+            login(data);
+            navigate('/');
+        } else {
+            alert('Login failed');
+        }
     };
 
     return (

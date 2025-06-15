@@ -1,6 +1,6 @@
 import {useAuth} from "../../contexts/ContextsAuth";
 import {useTranslation} from "react-i18next";
-import {COLORS} from "../../constants/appConfig";
+import { COLORS } from "../../constants/theme";
 
 const FirstSection = () => {
     const { t, i18n } = useTranslation();

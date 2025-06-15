@@ -1,21 +1,22 @@
 // src/services/api.ts
 import axios from 'axios';
-import { useAuth } from '../contexts/ContextsAuth';
-
-const BASE_URL = 'http://127.0.0.1:8080';
+import { BASE_URL } from '../constants/apiConfig';
 
 const api = axios.create({
     baseURL: BASE_URL,
 });
 
-// helper to refresh token
 export const refreshAccessToken = async (refreshToken: string) => {
     const response = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken });
     return response.data.accessToken;
 };
 
-// interceptors
-export const setupInterceptors = (accessToken: string, refreshToken: string, login: Function, logout: Function) => {
+export const setupInterceptors = (
+    accessToken: string,
+    refreshToken: string,
+    login: Function,
+    logout: Function
+) => {
     api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
     api.interceptors.response.use(

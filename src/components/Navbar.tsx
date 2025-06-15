@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/ContextsAuth';
-import { COLORS } from '../constants/appConfig';
-import logo from '../assets/logo.jpg'; // adjust path as needed
+import { COLORS } from '../constants/theme';
+import { logo } from '../constants/assets';
 
 const Navbar: React.FC = () => {
     const { user } = useAuth();
@@ -31,12 +31,12 @@ const Navbar: React.FC = () => {
                 </button>
                 {user ? (
                     <>
-                        <a href="/appointments" className="hover:underline">
-                            {t('appointments')}
+                        <a href="/book" className="hover:underline">
+                            {t('book')}
                         </a>
-                        <a href="/profile" className="hover:underline">
-                            {t('profile')}
-                        </a>
+                        <div className="w-8 h-8 rounded-full bg-white text-blue-700 flex items-center justify-center font-bold">
+                            {user.username.charAt(0).toUpperCase()}
+                        </div>
                     </>
                 ) : (
                     <a href="/login" className="hover:underline">

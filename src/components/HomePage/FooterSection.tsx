@@ -1,12 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { COLORS } from '../../constants/theme';
-import logo from '../../assets/logo.jpg';
-import appStoreIcon from '../../assets/appstore.svg';
-import googlePlayIcon from '../../assets/googleplay.svg';
-import facebookIcon from '../../assets/facebook.svg';
-import instagramIcon from '../../assets/instagram.svg';
-import youtubeIcon from '../../assets/youtube.svg';
+import {
+    logo,
+    appStoreIcon,
+    googlePlayIcon,
+    facebookIcon,
+    instagramIcon,
+    youtubeIcon,
+} from '../../constants/assets';
 
 const Footer: React.FC = () => {
     const { t } = useTranslation();
