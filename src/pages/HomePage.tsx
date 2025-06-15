@@ -2,11 +2,18 @@
 import React from 'react';
 import { COLORS } from '../constants/appConfig';
 import { useAuth } from '../contexts/ContextsAuth';
+import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo.jpg'; // adjust path if needed
 import heroImage from '../assets/doctor2.png'; // right-side doctor image
 
 const HomePage: React.FC = () => {
     const { user } = useAuth();
+    const { t, i18n } = useTranslation();
+
+    const toggleLang = () => {
+        const newLang = i18n.language === 'en' ? 'ar' : 'en';
+        i18n.changeLanguage(newLang);
+    };
 
     return (
         <div className="min-h-screen bg-white">
@@ -16,13 +23,16 @@ const HomePage: React.FC = () => {
                 <div className="flex items-center space-x-6 text-sm font-medium">
                     <button className="bg-white text-blue-700 px-3 py-1 rounded-full">Are you a provider?</button>
                     <a href="#" className="hover:underline">Help Center</a>
+                    <button onClick={toggleLang} className="hover:underline">
+                        {i18n.language === 'en' ? 'العربية' : 'English'}
+                    </button>
                     {user ? (
                         <>
-                            <a href="/appointments" className="hover:underline">My Appointments</a>
-                            <a href="/profile" className="hover:underline">Profile</a>
+                            <a href="/appointments" className="hover:underline">{t('appointments')}</a>
+                            <a href="/profile" className="hover:underline">{t('profile')}</a>
                         </>
                     ) : (
-                        <a href="/login" className="hover:underline">Log in</a>
+                        <a href="#/login" className="hover:underline">{t('login')}</a>
                     )}
                 </div>
             </nav>
@@ -31,13 +41,13 @@ const HomePage: React.FC = () => {
             <div className="relative bg-blue-600 text-white h-[500px] overflow-hidden">
                 {/* Left Side Content */}
                 <div className="relative z-10 flex flex-col justify-center px-10 py-16 max-w-xl space-y-8">
-                    <h1 className="text-3xl md:text-4xl font-bold">Live a healthier life</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold">{t('title')}</h1>
 
                     {/* Search bar */}
                     <div className="flex flex-col md:flex-row bg-white rounded-full overflow-hidden shadow-lg">
                         <input
                             type="text"
-                            placeholder="Name, specialty, clinic..."
+                            placeholder={t('searchPlaceholder')}
                             className="flex-1 px-4 py-3 text-sm text-gray-700 outline-none"
                         />
 

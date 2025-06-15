@@ -1,3 +1,5 @@
+/* eslint-env node */
+/* eslint-disable */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
