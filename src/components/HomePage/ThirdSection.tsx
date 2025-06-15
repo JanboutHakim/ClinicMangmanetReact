@@ -1,9 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Feature from "./FeuatreProbs";
-import iconCalendar from '../../assets/calendar.svg';
-import iconChat from '../../assets/chat.svg';
-import iconHeart from '../../assets/heart.svg';
+import { calendarIcon as iconCalendar, chatIcon as iconChat, heartIcon as iconHeart } from '../../constants/assets';
 
 const ThirdSection = () => {
     const { t } = useTranslation();

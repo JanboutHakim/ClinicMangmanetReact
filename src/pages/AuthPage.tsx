@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { APP_NAME, LOGO_URL } from '../constants/appConfig';
 import LoginForm from '../components/LoginForm';
 import SignupForm from '../components/SignupForm';
-import signupBg from '../assets/signup-bg.jpg';
+import { signupBg } from '../constants/assets';
 
 const AuthPage: React.FC = () => {
     const [mode, setMode] = useState<'login' | 'signup'>('login');

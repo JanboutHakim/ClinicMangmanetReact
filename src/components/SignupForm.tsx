@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LabeledInput from './LabeledInput';
 import Button from './Button';
-import {BASE_URL} from "../constants/appConfig";
+import { BASE_URL } from "../constants/apiConfig";
 
 type Props = {
     onSwitch: () => void;

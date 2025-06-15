@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import dayjs from 'dayjs'; // npm install dayjs
+import { useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
+import api from '../services/api';
+import { API_ENDPOINTS } from '../constants/apiConfig';
+import { useAuth } from '../contexts/ContextsAuth';
 
-type Props = {
-    allAppointments: string[]; // from the API
-};
-
-const AppointmentBookingPage: React.FC<Props> = ({ allAppointments }) => {
+const AppointmentBookingPage: React.FC = () => {
+    const { doctorId } = useParams();
+    const { accessToken } = useAuth();
+    const [allAppointments, setAllAppointments] = useState<string[]>([]);
     const [visibleDays, setVisibleDays] = useState(7); // show 1 week initially
+
+    useEffect(() => {
+        if (!doctorId) return;
+        api.get(API_ENDPOINTS.doctorAppointments(doctorId), {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        })
+            .then((res) => setAllAppointments(res.data))
+            .catch((err) => console.error(err));
+    }, [doctorId, accessToken]);
 
     // Group appointments by date
     const grouped = allAppointments.reduce((acc: Record<string, string[]>, iso) => {
