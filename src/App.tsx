@@ -4,6 +4,9 @@ import { setupInterceptors } from './services/api';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import { useTranslation } from 'react-i18next';
+import AppointmentBookingPage from "./pages/AppointmentBookingPage";
+import appointmentsData from "./data/appointments.json";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App: React.FC = () => {
     const { accessToken, refreshToken, login, logout } = useAuth();
@@ -31,7 +34,12 @@ const App: React.FC = () => {
     }, []);
 
     if (page === 'login') return <AuthPage />;
-    return <HomePage />;
+    return (<Router>
+        <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<AuthPage />} />
+        </Routes>
+    </Router>);
 };
 
 export default App;

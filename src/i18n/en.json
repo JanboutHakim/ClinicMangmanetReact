@@ -24,5 +24,29 @@
   "passwordUppercase": "At least one uppercase letter",
   "passwordNumber": "At least one number",
   "signup": "Sign Up",
-  "signin": "Sign In"
+  "signin": "Sign In",
+  "features": [
+    {
+      "title": "Faster and easier access to care",
+      "text": "Book video or in-person appointments and get reminders so you never miss one."
+    },
+    {
+      "title": "Receive care on your terms",
+      "text": "Message your practitioners, get preventive advice and care when you need it."
+    },
+    {
+      "title": "Manage your health",
+      "text": "Easily keep in one place all your health information and that of those who are important to you."
+    }
+  ],
+  "footer": {
+    "description": "Your trusted partner in health and wellness.",
+    "links": "Quick Links",
+    "about": "About Us",
+    "contact": "Contact",
+    "terms": "Terms & Conditions",
+    "download": "Get Our App",
+    "rights": "All rights reserved."
+  }
+
 }
