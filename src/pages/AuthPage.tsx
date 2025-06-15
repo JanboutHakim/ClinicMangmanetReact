@@ -1,10 +1,10 @@
 // src/pages/AuthPage.tsx
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { APP_NAME, LOGO_URL } from '../constants/appConfig';
+import { APP_NAME } from '../constants/appConfig';
+import { LOGO_URL, SIGNUP_BG } from '../constants/assets';
 import LoginForm from '../components/LoginForm';
 import SignupForm from '../components/SignupForm';
-import signupBg from '../assets/signup-bg.jpg';
 
 const AuthPage: React.FC = () => {
     const [mode, setMode] = useState<'login' | 'signup'>('login');
@@ -34,7 +34,7 @@ const AuthPage: React.FC = () => {
             </div>
 
             <div className="hidden md:block">
-                <img src={signupBg} alt="Signup" className="object-cover w-full h-full" />
+                <img src={SIGNUP_BG} alt="Signup" className="object-cover w-full h-full" />
             </div>
         </div>
     );

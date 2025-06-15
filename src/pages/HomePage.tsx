@@ -1,10 +1,9 @@
 // src/pages/HomePage.tsx
 import React from 'react';
-import { COLORS } from '../constants/appConfig';
+import { COLORS } from '../constants/theme';
+import { LOGO_URL, HERO_IMAGE } from '../constants/assets';
 import { useAuth } from '../contexts/ContextsAuth';
 import { useTranslation } from 'react-i18next';
-import logo from '../assets/logo.jpg'; // adjust path if needed
-import heroImage from '../assets/doctor2.png'; // right-side doctor image
 
 const HomePage: React.FC = () => {
     const { user } = useAuth();
@@ -19,7 +18,7 @@ const HomePage: React.FC = () => {
         <div className="min-h-screen bg-white">
             {/* Navbar */}
             <nav className="flex justify-between items-center px-6 py-4 text-white" style={{ backgroundColor: COLORS.primary }}>
-                <img src={logo} alt="Logo" className="h-8" />
+                <img src={LOGO_URL} alt="Logo" className="h-8" />
                 <div className="flex items-center space-x-6 text-sm font-medium">
                     <button className="bg-white text-blue-700 px-3 py-1 rounded-full">{t('provider')}</button>
                     <a href="#" className="hover:underline">{t('help')}</a>
@@ -59,7 +58,7 @@ const HomePage: React.FC = () => {
 
                 {/* Floating Image */}
                 <img
-                    src={heroImage}
+                    src={HERO_IMAGE}
                     alt="Doctor"
                     className="absolute bottom-0 right-0 h-[500px] object-contain z-0"
                 />
