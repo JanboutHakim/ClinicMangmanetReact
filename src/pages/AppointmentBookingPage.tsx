@@ -37,7 +37,7 @@ const AppointmentBookingPage: React.FC = () => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 py-8 bg-blue-50 min-h-screen">
-            {/* Left column: appointment selection */}
+            {/* Left column: Appointment selection */}
             <div className="md:col-span-2">
                 <h2 className="text-xl font-semibold mb-6">Choose a date for your appointment</h2>
 
@@ -73,7 +73,7 @@ const AppointmentBookingPage: React.FC = () => {
                 </div>
             </div>
 
-            {/* Right column: appointment details */}
+            {/* Right column: Appointment details */}
             <div className="bg-white p-4 rounded shadow h-fit">
                 <h3 className="font-bold mb-2">Dr. Lisa Budras-Krüger</h3>
                 <p className="text-sm text-gray-600 mb-4">Doctor in further training</p>

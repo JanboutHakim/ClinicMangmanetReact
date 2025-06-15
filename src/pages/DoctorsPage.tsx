@@ -18,7 +18,10 @@ const DoctorsPage: React.FC = () => {
         api.get(API_ENDPOINTS.doctors, {
             headers: { Authorization: `Bearer ${accessToken}` },
         })
-            .then((res) => setDoctors(res.data))
+            .then((res) => {
+                setDoctors(res.data)
+                console.log(res.data)
+            })
             .catch((err) => console.error(err));
     }, [accessToken]);
 
