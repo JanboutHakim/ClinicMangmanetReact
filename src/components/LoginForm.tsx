@@ -1,5 +1,6 @@
 // src/components/LoginForm.tsx
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import LabeledInput from './LabeledInput';
 import Button from './Button';
 import {BASE_URL} from "../constants/appConfig";
@@ -9,6 +10,7 @@ type Props = {
 };
 
 const LoginForm: React.FC<Props> = ({ onSwitch }) => {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({ username: '', password: '' });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,14 +30,14 @@ const LoginForm: React.FC<Props> = ({ onSwitch }) => {
     return (
         <form onSubmit={handleLogin} className="space-y-4">
             <LabeledInput
-                label="Username"
+                label={t('username')}
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder="Your username"
+                placeholder={t('username')}
             />
             <LabeledInput
-                label="Password"
+                label={t('password')}
                 name="password"
                 type="password"
                 value={formData.password}
@@ -43,13 +45,13 @@ const LoginForm: React.FC<Props> = ({ onSwitch }) => {
                 placeholder="••••••••"
             />
             <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-                Log In
+                {t('signin')}
             </Button>
 
             <p className="text-sm text-center mt-4">
-                Don't have an account?{' '}
+                {t('dontHaveAccount')} {' '}
                 <button type="button" onClick={onSwitch} className="text-blue-600 hover:underline">
-                    Sign up
+                    {t('signup')}
                 </button>
             </p>
         </form>
