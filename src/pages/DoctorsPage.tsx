@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 interface Doctor {
     id: number;
-    name: string;
+    clinicName: string;
     specialty?: string;
 }
 
@@ -35,7 +35,7 @@ const DoctorsPage: React.FC = () => {
 
     const filteredDoctors = doctors.filter(
         (d) =>
-            d.name.toLowerCase().includes(search.toLowerCase()) &&
+            d.clinicName.toLowerCase().includes(search.toLowerCase()) &&
             (specialtyFilter === '' || d.specialty === specialtyFilter)
     );
 

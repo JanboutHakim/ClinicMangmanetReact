@@ -1,77 +1,119 @@
 import React, { useEffect, useState } from 'react';
-import { FaMapMarkerAlt } from 'react-icons/fa';
 import axios from 'axios';
 
-interface AppointmentTime {
-    date: string;         // e.g. "2025-06-17"
-    times: string[];      // e.g. ["09:30", "09:45"]
+interface DoctorData {
+    id: number;
+    clinicName: string;
+    address: string;
+    specialization: string[];
+    imageUrl?: string;
 }
 
-interface DoctorData {
-    clinicName: string;
-    specialty: string;
-    address: string;
-    imageUrl?: string;
-    schedule: AppointmentTime[];
+interface GroupedSlots {
+    date: string;
+    times: string[];
 }
+
+const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const AppointmentCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
     const [doctor, setDoctor] = useState<DoctorData | null>(null);
+    const [slots, setSlots] = useState<GroupedSlots[]>([]);
+    const [showAll, setShowAll] = useState(false);
 
     useEffect(() => {
-        axios.get(`/api/doctors/${doctorId}`) // 🔁 Replace with your API endpoint
-            .then(response => setDoctor(response.data))
-            .catch(error => console.error('Error fetching doctor data:', error));
+        axios
+            .get(`http://localhost:8080/doctors/${doctorId}`)
+            .then((res) => setDoctor(res.data))
+            .catch((err) => console.error('Doctor fetch error:', err));
+
+        axios
+            .get(`http://localhost:8080/appointments/doctor/${doctorId}/available-slots`)
+            .then((res) => {
+                const rawSlots: string[] = Array.isArray(res.data) ? res.data : [];
+                const grouped: { [key: string]: string[] } = {};
+
+                rawSlots.forEach((datetime) => {
+                    const [date, time] = datetime.split('T');
+                    if (!grouped[date]) grouped[date] = [];
+                    grouped[date].push(time.slice(0, 5)); // "09:00:00" → "09:00"
+                });
+
+                const groupedArray: GroupedSlots[] = Object.entries(grouped).map(([date, times]) => ({
+                    date,
+                    times,
+                }));
+
+                setSlots(groupedArray);
+            })
+            .catch((err) => console.error('Slots fetch error:', err));
     }, [doctorId]);
 
     if (!doctor) return <div>Loading...</div>;
 
-    const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-
     const getDayLabel = (dateStr: string) => {
         const date = new Date(dateStr);
-        return `${weekdays[date.getDay()]}\n${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+        const weekday = weekdays[date.getDay()];
+        const formatted = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return { weekday, formatted };
     };
 
+    const visibleSlots = showAll ? slots : slots.slice(0, 7);
+
     return (
-        <div className="border rounded-lg overflow-hidden shadow-sm flex flex-col md:flex-row p-4 gap-4 bg-white">
+        <div className="border rounded-lg shadow-sm flex flex-col md:flex-row p-6 gap-6 bg-white">
             {/* Left: Doctor Info */}
             <div className="flex-1 flex flex-col items-start gap-2">
-                <img src={doctor.imageUrl || '/placeholder.png'} alt={doctor.name} className="h-12 w-12 rounded-full object-cover" />
-                <p className="font-semibold text-blue-700">{doctor.name}</p>
-                <p className="text-sm text-gray-600">{doctor.specialty}</p>
-                <div className="flex items-center text-sm text-gray-600">
-                    <FaMapMarkerAlt className="mr-1" />
-                    {doctor.address}
-                </div>
-                <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition">
+                <img
+                    src={doctor.imageUrl || '/placeholder.png'}
+                    alt={doctor.clinicName}
+                    className="h-12 w-12 rounded-full object-cover"
+                />
+                <p className="font-semibold text-blue-700">{doctor.clinicName}</p>
+                <p className="text-sm text-gray-600">
+                    {doctor.specialization.length > 0 ? doctor.specialization.join(', ') : '—'}
+                </p>
+                <div className="text-sm text-gray-600">{doctor.address}</div>
+                <button className="mt-3 bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition">
                     Book Appointment
                 </button>
             </div>
 
-            {/* Right: Schedule Grid */}
+            {/* Right: Horizontal Days */}
             <div className="flex-[2] overflow-x-auto">
-                <div className="grid grid-cols-7 gap-2 text-center text-sm">
-                    {doctor.schedule.map((day, idx) => (
-                        <div key={idx}>
-                            <div className="font-semibold text-gray-700 whitespace-pre-line">{getDayLabel(day.date)}</div>
-                            <div className="mt-2 flex flex-col gap-1">
-                                {day.times.length === 0 ? (
-                                    <span className="text-gray-400">–</span>
-                                ) : (
-                                    day.times.map((time, i) => (
-                                        <span key={i} className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-medium cursor-pointer hover:bg-blue-200">
-                      {time}
-                    </span>
-                                    ))
+                <div className="flex gap-4 text-center text-sm">
+                    {visibleSlots.map((slot, idx) => {
+                        const { weekday, formatted } = getDayLabel(slot.date);
+                        return (
+                            <div key={idx} className="min-w-[100px]">
+                                <div className="font-semibold text-gray-800">{weekday}</div>
+                                <div className="text-xs text-gray-500 mb-2">{formatted}</div>
+                                {(showAll ? slot.times : slot.times.slice(0, 5)).map((time, i) => (
+                                    <div
+                                        key={i}
+                                        className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded mb-1 cursor-pointer hover:bg-blue-200"
+                                    >
+                                        {time}
+                                    </div>
+                                ))}
+                                {slot.times.length > 5 && !showAll && (
+                                    <div className="text-gray-400 text-xs">+{slot.times.length - 5} more</div>
                                 )}
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
-                <div className="text-right mt-4">
-                    <button className="text-blue-600 text-sm hover:underline">View More</button>
-                </div>
+
+                {!showAll && slots.length > 7 && (
+                    <div className="text-right mt-4">
+                        <button
+                            onClick={() => setShowAll(true)}
+                            className="text-blue-600 text-sm hover:underline"
+                        >
+                            View More
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
