@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
 import api from '../services/api';
 import { API_ENDPOINTS } from '../constants/apiConfig';
@@ -7,7 +7,9 @@ import { useAuth } from '../contexts/ContextsAuth';
 
 const AppointmentBookingPage: React.FC = () => {
     const { doctorId } = useParams();
+    const location = useLocation();
     const { accessToken } = useAuth();
+    const selectedSlot = new URLSearchParams(location.search).get('slot');
     const [allAppointments, setAllAppointments] = useState<string[]>([]);
     const [visibleDays, setVisibleDays] = useState(7); // show 1 week initially
 
@@ -39,7 +41,10 @@ const AppointmentBookingPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 py-8 bg-blue-50 min-h-screen">
             {/* Left column: Appointment selection */}
             <div className="md:col-span-2">
-                <h2 className="text-xl font-semibold mb-6">Choose a date for your appointment</h2>
+                <h2 className="text-xl font-semibold mb-2">Choose a date for your appointment</h2>
+                {selectedSlot && (
+                    <p className="mb-4 text-sm text-gray-700">Selected slot: {dayjs(selectedSlot).format('YYYY-MM-DD HH:mm')}</p>
+                )}
 
                 <div className="space-y-4">
                     {dateKeys.slice(0, visibleDays).map((date, index) => (

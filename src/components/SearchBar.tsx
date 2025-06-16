@@ -16,6 +16,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ className = '', onSearch }) => {
         onSearch?.(query);
     };
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setQuery(value);
+        onSearch?.(value);
+    };
+
     return (
         <form
             onSubmit={handleSubmit}
@@ -24,7 +30,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ className = '', onSearch }) => {
             <input
                 type="text"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={handleChange}
                 placeholder={t('searchPlaceholder')}
                 className="flex-1 px-8 py-5 text-lg text-gray-700 outline-none"
             />
