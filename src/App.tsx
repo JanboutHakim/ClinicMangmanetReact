@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import DoctorsPage from './pages/DoctorsPage';
 import AppointmentBookingPage from './pages/AppointmentBookingPage';
 import AppointmentsPage from './pages/AppointmentsPage';
+import ProfilePage from './pages/ProfilePage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App: React.FC = () => {
@@ -31,9 +32,10 @@ const App: React.FC = () => {
             <Route path="/book" element={<DoctorsPage />} />
             <Route path="/book/:doctorId" element={<AppointmentBookingPage />} />
             <Route path="/my-appointments" element={<AppointmentsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
         </Routes>
     </Router>
     );
-}; 
+};
 
 export default App;
