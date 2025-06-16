@@ -22,16 +22,18 @@ const LoginForm: React.FC<Props> = ({ onSwitch }) => {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        const res = await fetch(`${BASE_URL}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
-        });
-        if (res.ok) {
+        try {
+            const res = await fetch(`${BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            if (!res.ok) throw new Error('Login failed');
             const data = await res.json();
             login(data);
             navigate('/');
-        } else {
+        } catch {
             alert('Login failed');
         }
     };
