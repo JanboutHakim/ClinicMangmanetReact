@@ -7,6 +7,8 @@
   "noAppointments": "No appointments found.",
   "profile": "Profile",
   "logout": "Logout",
+  "cancel": "Cancel",
+  "reschedule": "Reschedule",
   "book": "Book Appointment",
   "provider": "Are you a provider?",
   "help": "Help Center",
