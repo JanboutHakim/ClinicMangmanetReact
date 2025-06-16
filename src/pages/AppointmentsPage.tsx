@@ -84,40 +84,55 @@ const AppointmentsPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-white">
             <Navbar />
-            <div className="p-6">
-                <h2 className="text-xl font-semibold mb-4">{t('appointments')}</h2>
-                {appointments.length === 0 ? (
-                    <p>{t('noAppointments')}</p>
-                ) : (
-                    <ul className="space-y-2">
-                        {appointments.map((appt) => (
-                            <li
-                                key={appt.id}
-                                className="bg-gray-100 p-4 rounded space-y-1"
-                            >
-                                <p className="font-semibold">{appt.doctorName}</p>
-                                <p>{dayjs(appt.startTime).format('MMMM D, YYYY HH:mm')}</p>
-                                <div className="flex gap-2 mt-2">
-                                    <button
-                                        onClick={() => handleReschedule(appt.doctorId)}
-                                        className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                                    >
-                                        {t('reschedule')}
-                                    </button>
-                                    <button
-                                        onClick={() => handleCancel(appt.id)}
-                                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
-                                    >
-                                        {t('cancel')}
-                                    </button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                <div className="p-6 max-w-5xl mx-auto">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('appointments')}</h2>
+
+                    {appointments.length === 0 ? (
+                        <p className="text-gray-500 text-center">{t('noAppointments')}</p>
+                    ) : (
+                        <ul className="space-y-4">
+                            {appointments.map((appt) => (
+                                <li
+                                    key={appt.id}
+                                    className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition duration-300"
+                                >
+                                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                                        <div className="mb-4 sm:mb-0">
+                                            <h3 className="text-lg font-semibold text-blue-700">
+                                                {appt.doctorName}
+                                            </h3>
+                                            <h5 className="text-sm font-semibold text-blue-700">
+                                                {appt.status}
+                                            </h5>
+
+                                            <p className="text-sm text-gray-500">
+                                                {dayjs(appt.startTime).format('MMMM D, YYYY • HH:mm')}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex gap-3">
+                                            <button
+                                                onClick={() => handleReschedule(appt.doctorId)}
+                                                className="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition"
+                                            >
+                                                {t('reschedule')}
+                                            </button>
+                                            <button
+                                                onClick={() => handleCancel(appt.id)}
+                                                className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition"
+                                            >
+                                                {t('cancel')}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
             </div>
-        </div>
-    );
+
+            );
 };
 
 export default AppointmentsPage;
