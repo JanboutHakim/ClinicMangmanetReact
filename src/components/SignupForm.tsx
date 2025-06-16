@@ -53,13 +53,20 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
             role: 'PATIENT',
         };
 
-        await fetch(`${BASE_URL}/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        });
+        try {
+            const res = await fetch(`${BASE_URL}/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
 
-        alert('Account created!');
+            if (!res.ok) throw new Error('Signup failed');
+
+            alert('Account created!');
+            onSwitch();
+        } catch {
+            alert('Signup failed');
+        }
     };
 
     return (
