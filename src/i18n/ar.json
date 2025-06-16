@@ -4,6 +4,7 @@
   "locationPlaceholder": "أين؟",
   "login": "تسجيل الدخول",
   "appointments": "مواعيدي",
+  "noAppointments": "لا توجد مواعيد",
   "profile": "الملف الشخصي",
   "book": "احجز موعدًا",
   "provider": "هل أنت مقدم خدمة؟",

@@ -6,6 +6,7 @@ import AuthPage from './pages/AuthPage';
 import { useTranslation } from 'react-i18next';
 import DoctorsPage from './pages/DoctorsPage';
 import AppointmentBookingPage from './pages/AppointmentBookingPage';
+import AppointmentsPage from './pages/AppointmentsPage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App: React.FC = () => {
@@ -29,6 +30,7 @@ const App: React.FC = () => {
             <Route path="/login" element={<AuthPage />} />
             <Route path="/book" element={<DoctorsPage />} />
             <Route path="/book/:doctorId" element={<AppointmentBookingPage />} />
+            <Route path="/my-appointments" element={<AppointmentsPage />} />
         </Routes>
     </Router>
     );
