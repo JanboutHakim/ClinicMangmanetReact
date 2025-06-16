@@ -34,6 +34,9 @@ const Navbar: React.FC = () => {
                         <a href="/book" className="hover:underline">
                             {t('book')}
                         </a>
+                        <a href="/my-appointments" className="hover:underline">
+                            {t('appointments')}
+                        </a>
                         <div className="w-8 h-8 rounded-full bg-white text-blue-700 flex items-center justify-center font-bold">
                             {user.username.charAt(0).toUpperCase()}
                         </div>
