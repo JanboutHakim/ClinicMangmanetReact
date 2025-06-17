@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../services/api';
+import { API_ENDPOINTS } from '../../constants/apiConfig';
 import { useAuth } from '../../contexts/ContextsAuth';
 
 interface RescheduleModalProps {
@@ -42,16 +43,16 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
         if (!user || !accessToken) return;
 
         // Fetch doctor info
-        axios
-            .get(`/doctors/${doctorId}`, {
+        api
+            .get(API_ENDPOINTS.doctor(doctorId), {
                 headers: { Authorization: `Bearer ${accessToken}` },
             })
             .then((res) => setDoctor(res.data))
             .catch((err) => console.error('Doctor fetch error:', err));
 
         // Fetch available slots
-        axios
-            .get(`/appointments/doctor/${doctorId}/available-slots`, {
+        api
+            .get(API_ENDPOINTS.availableSlots(doctorId), {
                 headers: { Authorization: `Bearer ${accessToken}` },
             })
             .then((res) => {
@@ -85,7 +86,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
         if (!selected || !user || !accessToken) return;
 
         try {
-            await axios.put(
+            await api.put(
                 `/appointments/${user.id}/reschedule/${appointmentId}`,
                 {
                     patientId: user.id,
