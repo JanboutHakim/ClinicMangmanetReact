@@ -9,4 +9,5 @@ export const API_ENDPOINTS = {
     id: number | string,
     patientId: number | string,
   ) => `/appointments/${id}/patient/${patientId}/appointments`,
+  bookAppointment: (userId: number | string) => `/appointments/${userId}`,
 };
