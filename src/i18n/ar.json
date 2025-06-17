@@ -61,6 +61,12 @@
     "terms": "الشروط والأحكام",
     "download": "حمّل تطبيقنا",
     "rights": "جميع الحقوق محفوظة."
-  }
-
+  },
+  "cancelConfirmation": "تأكيد إلغاء الموعد",
+  "cancelReason": "يرجى كتابة سبب الإلغاء:",
+  "confirmCancel": "تأكيد",
+  "cancelModalClose": "إغلاق",
+  "chooseTime": "اختر موعدًا جديدًا",
+  "noAvailableTimes": "لا توجد مواعيد متاحة.",
+  "confirmReschedule": "تأكيد إعادة الحجز"
 }

@@ -61,5 +61,14 @@
     "terms": "Terms & Conditions",
     "download": "Get Our App",
     "rights": "All rights reserved."
-  }
+  },
+  "cancelConfirmation": "Cancel Appointment",
+  "cancelReason": "Please enter a cancellation reason:",
+  "confirmCancel": "Confirm",
+  "cancelModalClose": "Close",
+  "chooseTime": "Choose a new appointment time",
+  "noAvailableTimes": "No available time slots.",
+  "confirmReschedule": "Confirm Reschedule"
+
+
 }

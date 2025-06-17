@@ -6,6 +6,7 @@ import { API_ENDPOINTS } from '../constants/apiConfig';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import AppointmentCard from "../components/Appointments/AppointmentCard";
 
 interface Appointment {
     id: number | string;
@@ -63,12 +64,12 @@ const AppointmentsPage: React.FC = () => {
         fetchData();
     }, [accessToken, user]);
 
-    const handleCancel = async (appointmentId: number | string) => {
+    const handleCancel = async (appointmentId: number | string, reason: string) => {
         if (!user) return;
         try {
-            await api.post(
+            await api.put(
                 `/appointments/${user.id}/${appointmentId}/cancel-by-patient`,
-                null,
+                { reason },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             );
             setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
@@ -76,6 +77,8 @@ const AppointmentsPage: React.FC = () => {
             console.error(err);
         }
     };
+
+
 
     const handleReschedule = (doctorId: number | string) => {
         navigate(`/book/${doctorId}`);
@@ -92,40 +95,17 @@ const AppointmentsPage: React.FC = () => {
                     ) : (
                         <ul className="space-y-4">
                             {appointments.map((appt) => (
-                                <li
+                                <AppointmentCard
                                     key={appt.id}
-                                    className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition duration-300"
-                                >
-                                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                                        <div className="mb-4 sm:mb-0">
-                                            <h3 className="text-lg font-semibold text-blue-700">
-                                                {appt.doctorName}
-                                            </h3>
-                                            <h5 className="text-sm font-semibold text-blue-700">
-                                                {appt.status}
-                                            </h5>
-
-                                            <p className="text-sm text-gray-500">
-                                                {dayjs(appt.startTime).format('MMMM D, YYYY • HH:mm')}
-                                            </p>
-                                        </div>
-
-                                        <div className="flex gap-3">
-                                            <button
-                                                onClick={() => handleReschedule(appt.doctorId)}
-                                                className="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition"
-                                            >
-                                                {t('reschedule')}
-                                            </button>
-                                            <button
-                                                onClick={() => handleCancel(appt.id)}
-                                                className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition"
-                                            >
-                                                {t('cancel')}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
+                                    id={appt.id}
+                                    doctorId={appt.doctorId}
+                                    doctorName={appt.doctorName}
+                                    startTime={appt.startTime}
+                                    status={appt.status}
+                                    onCancel={handleCancel}
+                                    onReschedule={handleReschedule}
+                                    t={t}
+                                />
                             ))}
                         </ul>
                     )}
