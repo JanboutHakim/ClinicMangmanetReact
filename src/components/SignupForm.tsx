@@ -14,7 +14,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
         username: '',
         password: '',
         confirmPassword: '',
-        firstName: '',
+        name: '',
         email: '',
         gender: 'MALE',
     });
@@ -47,9 +47,6 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
 
         const payload = {
             ...formData,
-            lastName: 'Default',
-            phoneNumber: '0000000000',
-            DOB: '2000-01-01',
             role: 'PATIENT',
         };
 
@@ -74,7 +71,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
             <LabeledInput
                 label={t('fullName')}
                 name="firstName"
-                value={formData.firstName}
+                value={formData.name}
                 onChange={handleChange}
                 placeholder={t('fullName')}
                 inputClassName="py-1.5 text-sm"
