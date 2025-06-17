@@ -83,7 +83,10 @@ const DoctorCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
                     {doctor.specialization.length > 0 ? doctor.specialization.join(', ') : '—'}
                 </p>
                 <div className="text-sm text-gray-600">{doctor.address}</div>
-                <button className="mt-3 bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition">
+                <button
+                    className="mt-3 bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition"
+                    onClick={() => navigate(`/book/${doctorId}`)}
+                >
                     Book Appointment
                 </button>
             </div>
@@ -100,7 +103,9 @@ const DoctorCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
                                 {(showAll ? slot.times : slot.times.slice(0, 5)).map((time, i) => (
                                     <div
                                         key={i}
-                                        onClick={() => navigate(`/book/${doctorId}?slot=${slot.date}T${time}`)}
+                                        onClick={() =>
+                                            navigate(`/book/${doctorId}/confirm?slot=${slot.date}T${time}`)
+                                        }
                                         className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded mb-1 cursor-pointer hover:bg-blue-200"
                                     >
                                         {time}
