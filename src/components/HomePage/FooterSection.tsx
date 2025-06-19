@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
                 {/* Brand & Description */}
                 <div className="flex flex-col items-center md:items-start">
-                    <img src={logo} alt="Logo" className="h-10 mb-3" />
+                    <img src={logo} alt="Logo" className="h-16 mb-3" />
                     <p className="text-gray-600 text-sm">
                         {t('footer.description')}
                     </p>

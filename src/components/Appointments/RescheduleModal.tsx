@@ -88,7 +88,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
         try {
             await api.put(
                 `/appointments/${user.id}/reschedule/${appointmentId}`,
-                {
+                {   id: appointmentId,
                     patientId: user.id,
                     doctorId,
                     startTime: selected,
@@ -137,7 +137,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                         {/* Time Slots */}
                         <div className="flex-[2] overflow-x-auto">
                             <div className="flex gap-4 text-center text-sm">
-                                {visibleSlots.map((slot, idx) => {
+                                i{visibleSlots.map((slot, idx) => {
                                     const { weekday, formatted } = getDayLabel(slot.date);
                                     return (
                                         <div key={idx} className="min-w-[100px]">

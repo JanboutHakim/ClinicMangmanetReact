@@ -42,14 +42,12 @@ const BookingPage: React.FC = () => {
         e.preventDefault();
         if (!user || !doctorId || !selectedSlot) return;
 
-        const startTime = dayjs(selectedSlot).toISOString();
-        const endTime = dayjs(selectedSlot).add(30, 'minute').toISOString();
-
+        const startTime = dayjs(selectedSlot).format('YYYY-MM-DDTHH:mm:ss');
+        console.log(startTime)
         const body = {
             patientId: user.id,
             doctorId: Number(doctorId),
             startTime,
-            endTime,
             reason,
             notes,
             cancellationReason: null,

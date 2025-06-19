@@ -1,4 +1,4 @@
-export { default as logo } from '../assets/logo.jpg';
+export { default as logo } from '../assets/logo.png';
 export { default as signupBg } from '../assets/signup-bg.jpg';
 export { default as appStoreIcon } from '../assets/appstore.svg';
 export { default as googlePlayIcon } from '../assets/googleplay.svg';

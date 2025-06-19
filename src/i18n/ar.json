@@ -68,5 +68,8 @@
   "cancelModalClose": "إغلاق",
   "chooseTime": "اختر موعدًا جديدًا",
   "noAvailableTimes": "لا توجد مواعيد متاحة.",
-  "confirmReschedule": "تأكيد إعادة الحجز"
+  "confirmReschedule": "تأكيد إعادة الحجز",
+  "phone": "رقم الجوال",
+  "addDrug": "أضافة دواء"
+
 }

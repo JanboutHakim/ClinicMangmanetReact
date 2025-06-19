@@ -10,6 +10,7 @@ import BookingPage from './pages/BookingPage';
 import AppointmentsPage from './pages/AppointmentsPage';
 import ProfilePage from './pages/ProfilePage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import DrugPage from "./pages/DrugPage";
 
 const App: React.FC = () => {
     const { accessToken, refreshToken, login, logout } = useAuth();
@@ -35,6 +36,7 @@ const App: React.FC = () => {
             <Route path="/book/:doctorId/confirm" element={<BookingPage />} />
             <Route path="/my-appointments" element={<AppointmentsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/drugs" element={<DrugPage />} />
         </Routes>
     </Router>
     );

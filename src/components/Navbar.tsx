@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/ContextsAuth';
@@ -8,6 +8,8 @@ import { logo } from '../constants/assets';
 const Navbar: React.FC = () => {
     const { user } = useAuth();
     const { t, i18n } = useTranslation();
+    const [imageError, setImageError] = useState(false);
+
 
     const toggleLang = () => {
         i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en');
@@ -19,7 +21,7 @@ const Navbar: React.FC = () => {
             style={{ backgroundColor: COLORS.primary }}
         >
             <Link to="/">
-                <img src={logo} alt="Logo" className="h-8" />
+                <img src={logo} alt="Logo" className="h-16" />
             </Link>
             <div className="flex items-center gap-6 text-sm font-medium">
                 <button className="bg-white text-blue-700 px-3 py-1 rounded-full transform transition-transform duration-300 hover:scale-105 will-change-transform"
@@ -37,14 +39,28 @@ const Navbar: React.FC = () => {
                         <Link to="/book" className="hover:underline">
                             {t('book')}
                         </Link>
+                        <Link to="/drugs" className="hover:underline">
+                            {t('addDrug')}
+                        </Link>
                         <Link to="/my-appointments" className="hover:underline">
                             {t('appointments')}
                         </Link>
                         <Link to="/profile">
-                            <div className="w-8 h-8 rounded-full bg-white text-blue-700 flex items-center justify-center font-bold">
-                                {user.username.charAt(0).toUpperCase()}
-                            </div>
+                            {user.imageUrl && !imageError ? (
+                                <img
+                                    src={user.imageUrl}
+                                    alt="Profile"
+                                    className="w-8 h-8 rounded-full object-cover border-2 border-white"
+                                    onError={() => setImageError(true)} // 👈 fallback if image fails
+                                />
+                            ) : (
+                                <div className="w-8 h-8 rounded-full bg-white text-blue-700 flex items-center justify-center font-bold">
+                                    {user.username.charAt(0).toUpperCase()}
+                                </div>
+                            )}
                         </Link>
+
+
                     </>
                 ) : (
                     <Link to="/login" className="hover:underline">

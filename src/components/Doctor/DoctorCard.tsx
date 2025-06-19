@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { API_ENDPOINTS } from '../../constants/apiConfig';
+import dayjs from "dayjs";
 
 interface DoctorData {
     id: number;
@@ -56,7 +57,7 @@ const DoctorCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
 
     const getDayLabel = (dateStr: string) => {
         const date = new Date(dateStr);
-        const weekday = weekdays[date.getDay()];
+        const weekday = weekdays[dayjs(dateStr).day()];
         const formatted = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         return { weekday, formatted };
     };

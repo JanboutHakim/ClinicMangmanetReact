@@ -1,5 +1,5 @@
 export const COLORS = {
-    primary: '#008000',   // Tailwind's blue-600
-    secondary: '#1e293b', // slate-800
-    background: '#f8fafc' // slate-50
+    primary: '#2F86A6',   // Tailwind's blue-600
+    secondary: '#34BE82', // slate-800
+    background: '#2FDD92' // slate-50
 };

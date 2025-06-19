@@ -68,7 +68,9 @@
   "cancelModalClose": "Close",
   "chooseTime": "Choose a new appointment time",
   "noAvailableTimes": "No available time slots.",
-  "confirmReschedule": "Confirm Reschedule"
+  "confirmReschedule": "Confirm Reschedule",
+  "phone": "Phone Number",
+  "addDrug": "Add Drug"
 
 
 }

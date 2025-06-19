@@ -17,6 +17,8 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
         name: '',
         email: '',
         gender: 'MALE',
+        phone: '',
+        countryCode: '+966', // Default to Saudi Arabia for example
     });
 
     const [passwordTouched, setPasswordTouched] = useState(false);
@@ -47,6 +49,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
 
         const payload = {
             ...formData,
+            phoneNumber:formData.phone,
             role: 'PATIENT',
         };
 
@@ -70,7 +73,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
         <form onSubmit={handleSignup} className="space-y-4 text-sm">
             <LabeledInput
                 label={t('fullName')}
-                name="firstName"
+                name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder={t('fullName')}
@@ -82,7 +85,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder={t('username')}
+                placeholder={t('Username')}
                 inputClassName="py-1.5 text-sm"
             />
 
@@ -96,6 +99,33 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
                 placeholder="••••••••"
                 inputClassName="py-1.5 text-sm"
             />
+            <div className="flex flex-col space-y-1">
+                <label className="text-sm font-medium">{t('phone')}</label>
+                <div className="flex">
+                    <select
+                        name="countryCode"
+                        value={formData.countryCode}
+                        onChange={handleChange}
+                        className="px-2 py-1.5 text-sm border border-gray-300 rounded-l-md bg-white"
+                    >
+                        <option value="+963">🇸🇾 +963</option>
+                        <option value="+966">🇸🇦 +966</option>
+                        <option value="+20">🇪🇬 +20</option>
+                        <option value="+971">🇦🇪 +971</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+44">🇬🇧 +44</option>
+                    </select>
+                    <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder={t('phone')}
+                        className="flex-1 px-4 py-1.5 text-sm border border-l-0 border-gray-300 rounded-r-md focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+            </div>
+
 
             {passwordTouched && (
                 <ul className="text-xs text-gray-600 pl-5 list-disc space-y-1">
