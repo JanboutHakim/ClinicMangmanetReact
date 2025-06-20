@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import LabeledInput from './LabeledInput';
 import Button from './Button';
 import { BASE_URL } from "../constants/apiConfig";
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
     onSwitch: () => void;
@@ -10,6 +11,7 @@ type Props = {
 
 const SignupForm: React.FC<Props> = ({ onSwitch }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -63,7 +65,9 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
             if (!res.ok) throw new Error('Signup failed');
 
             alert('Account created!');
-            onSwitch();
+            navigate('/verify-otp', {
+                state: { username: formData.username, email: formData.email },
+            });
         } catch {
             alert('Signup failed');
         }
