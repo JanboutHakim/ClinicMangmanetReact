@@ -11,6 +11,7 @@ import AppointmentsPage from './pages/AppointmentsPage';
 import ProfilePage from './pages/ProfilePage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DrugPage from "./pages/DrugPage";
+import AddDrugPage from './pages/AddDrugPage';
 import VerifyOtpPage from './pages/VerifyOtpPage';
 import MyDrugPage from "./pages/MyDrugPage";
 
@@ -39,6 +40,7 @@ const App: React.FC = () => {
             <Route path="/my-appointments" element={<AppointmentsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/drugs" element={<DrugPage />} />
+            <Route path="/add-drug" element={<AddDrugPage />} />
             <Route path="/verify-otp" element={<VerifyOtpPage />} />
             <Route path="/myDrug" element={<MyDrugPage />}/>
         </Routes>

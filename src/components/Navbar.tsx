@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
                         <a href="/myDrug" className="hover:underline">
                             {t('myDrug')}
                         </a>
-                        <Link to="/drugs" className="hover:underline">
+                        <Link to="/add-drug" className="hover:underline">
                             {t('addDrug')}
                         </Link>
                         <Link to="/my-appointments" className="hover:underline">
