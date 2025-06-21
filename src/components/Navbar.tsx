@@ -31,14 +31,20 @@ const Navbar: React.FC = () => {
                 <a href="#" className="hover:underline">
                     {t('help')}
                 </a>
+                {!user && (
+                    <a href="/drugs" className="hover:underline">
+                        {t('drug')}
+                    </a>
+                )}
+
                 <button onClick={toggleLang} className="hover:underline">
                     {i18n.language === 'en' ? 'العربية' : 'English'}
                 </button>
                 {user ? (
                     <>
-                        <Link to="/book" className="hover:underline">
-                            {t('book')}
-                        </Link>
+                        <a href="/myDrug" className="hover:underline">
+                            {t('myDrug')}
+                        </a>
                         <Link to="/drugs" className="hover:underline">
                             {t('addDrug')}
                         </Link>
@@ -48,9 +54,9 @@ const Navbar: React.FC = () => {
                         <Link to="/profile">
                             {user.imageUrl && !imageError ? (
                                 <img
-                                    src={user.imageUrl}
+                                    src={`http://localhost:8080${user.imageUrl}`}
                                     alt="Profile"
-                                    className="w-8 h-8 rounded-full object-cover border-2 border-white"
+                                    className="w-12 h-12 rounded-full object-cover border-2 border-white"
                                     onError={() => setImageError(true)} // 👈 fallback if image fails
                                 />
                             ) : (

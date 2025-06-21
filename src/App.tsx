@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DrugPage from "./pages/DrugPage";
 import VerifyOtpPage from './pages/VerifyOtpPage';
+import MyDrugPage from "./pages/MyDrugPage";
 
 const App: React.FC = () => {
     const { accessToken, refreshToken, login, logout } = useAuth();
@@ -39,6 +40,7 @@ const App: React.FC = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/drugs" element={<DrugPage />} />
             <Route path="/verify-otp" element={<VerifyOtpPage />} />
+            <Route path="/myDrug" element={<MyDrugPage />}/>
         </Routes>
     </Router>
     );

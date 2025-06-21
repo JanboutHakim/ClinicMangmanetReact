@@ -112,7 +112,7 @@ const AppointmentsPage: React.FC = () => {
                 </div>
             {/* Floating Add Button */}
             <button
-                onClick={() => navigate('/doctors')}
+                onClick={() => navigate('/book')}
                 className="fixed bottom-6 right-6 flex items-center gap-2 px-5 py-3 rounded-full shadow-lg text-white font-medium text-sm hover:opacity-90 transition"
                 style={{ backgroundColor: COLORS.secondary }} // COLORS.secondary
             >

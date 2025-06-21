@@ -15,6 +15,7 @@ const ProfilePage: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploadMessage, setUploadMessage] = useState('');
     const [imageUrl, setImageUrl] = useState('');
+    const [imageError, setImageError] = useState(false);
 
     const handleLogout = () => {
         logout();
@@ -49,10 +50,15 @@ const ProfilePage: React.FC = () => {
         <div className="min-h-screen bg-white">
             <Navbar />
             <div className="p-6 flex flex-col items-center gap-4">
-                {imageUrl ? (
-                    <img src={imageUrl} alt="User" className="w-24 h-24 rounded-full object-cover" />
+                {user?.imageUrl && !imageError ? (
+                    <img
+                        src={`http://localhost:8080${user.imageUrl}`}
+                        alt="Profile"
+                        className="w-16 h-16 rounded-full object-cover border-2 border-white"
+                        onError={() => setImageError(true)} // 👈 fallback if image fails
+                    />
                 ) : (
-                    <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-2xl font-bold">
+                    <div className="w-24 h-24 rounded-full bg-white text-blue-700 flex items-center justify-center font-bold">
                         {user?.username.charAt(0).toUpperCase()}
                     </div>
                 )}

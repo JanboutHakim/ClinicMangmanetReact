@@ -51,7 +51,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
 
         const payload = {
             ...formData,
-            phoneNumber:formData.phone,
+            phoneNumber:formData.countryCode+formData.phone,
             role: 'PATIENT',
         };
 
@@ -93,16 +93,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
                 inputClassName="py-1.5 text-sm"
             />
 
-            <LabeledInput
-                label={t('password')}
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                onFocus={() => setPasswordTouched(true)}
-                placeholder="••••••••"
-                inputClassName="py-1.5 text-sm"
-            />
+
             <div className="flex flex-col space-y-1">
                 <label className="text-sm font-medium">{t('phone')}</label>
                 <div className="flex">
@@ -130,7 +121,27 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
                 </div>
             </div>
 
+            <LabeledInput
+                label={t('email')}
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="example@gmail.com"
+                inputClassName="py-1.5 text-sm"
+            />
 
+
+            <LabeledInput
+                label={t('password')}
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                onFocus={() => setPasswordTouched(true)}
+                placeholder="••••••••"
+                inputClassName="py-1.5 text-sm"
+            />
             {passwordTouched && (
                 <ul className="text-xs text-gray-600 pl-5 list-disc space-y-1">
                     <li className={passwordStatus.length ? 'text-green-600' : ''}>{t('passwordLength')}</li>
@@ -138,7 +149,6 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
                     <li className={passwordStatus.number ? 'text-green-600' : ''}>{t('passwordNumber')}</li>
                 </ul>
             )}
-
             <LabeledInput
                 label={t('confirmPassword')}
                 name="confirmPassword"
@@ -148,6 +158,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
                 placeholder="••••••••"
                 inputClassName="py-1.5 text-sm"
             />
+
 
             <div className="flex flex-col">
                 <label className="text-sm font-medium mb-1">{t('gender')}</label>

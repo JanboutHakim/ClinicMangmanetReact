@@ -70,7 +70,15 @@
   "noAvailableTimes": "No available time slots.",
   "confirmReschedule": "Confirm Reschedule",
   "phone": "Phone Number",
-  "addDrug": "Add Drug"
+  "addDrug": "Add Drug",
+  "myDrug": "My Drugs",
+  "drug": "Drugs",
+  "myDrugs": "My Drugs",
+  "noDrugsFound": "No medications found.",
+  "frequency": "Frequency",
+  "dosage": "Dosage",
+  "startDate": "Start Date"
+
 
 
 }

@@ -13,6 +13,8 @@ interface Doctor {
     specialty?: string;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 const DoctorsPage: React.FC = () => {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
     const [search, setSearch] = useState('');
@@ -22,31 +24,42 @@ const DoctorsPage: React.FC = () => {
     const { t } = useTranslation();
 
     useEffect(() => {
-        api
-            .get(API_ENDPOINTS.doctors, {
-                headers: { Authorization: `Bearer ${accessToken}` },
-            })
-            .then((res) => setDoctors(res.data))
-            .catch((err) => console.error(err));
-    }, [accessToken]);
+        const fetchDoctors = async () => {
+            try {
+                const params = new URLSearchParams();
+                if (search) params.append('q', search);
+                if (specialtyFilter) params.append('specialty', specialtyFilter);
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [search, specialtyFilter]);
+                const endpoint =
+                    search || specialtyFilter
+                        ? `${API_ENDPOINTS.doctors}/search?${params.toString()}`
+                        : API_ENDPOINTS.doctors;
+
+                const res = await api.get(endpoint, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+
+                console.log('Fetched doctors:', res.data);
+
+                const data = Array.isArray(res.data) ? res.data : res.data?.doctors || [];
+                setDoctors(data);
+                setCurrentPage(1);
+            } catch (err) {
+                console.error('Failed to fetch doctors:', err);
+                setDoctors([]);
+            }
+        };
+
+        fetchDoctors();
+    }, [accessToken, search, specialtyFilter]);
 
     const specialties = Array.from(
         new Set(doctors.map((d) => d.specialty).filter(Boolean))
     ) as string[];
 
-    const filteredDoctors = doctors.filter(
-        (d) =>
-            d.clinicName.toLowerCase().includes(search.toLowerCase()) &&
-            (specialtyFilter === '' || d.specialty === specialtyFilter)
-    );
-
-    const start = (currentPage - 1) * 10;
-    const paginatedDoctors = filteredDoctors.slice(start, start + 10);
-    const totalPages = Math.ceil(filteredDoctors.length / 10);
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    const paginatedDoctors = doctors.slice(start, start + ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(doctors.length / ITEMS_PER_PAGE);
 
     return (
         <div className="min-h-screen bg-white">
@@ -54,6 +67,7 @@ const DoctorsPage: React.FC = () => {
             <div className="p-6 space-y-4">
                 <SearchBar className="w-full" onSearch={setSearch} />
                 <h2 className="text-xl font-semibold">{t('doctorsHeading')}</h2>
+
                 <div className="flex items-center gap-2">
                     <label htmlFor="specialty" className="font-medium">
                         {t('filterSpecialty')}
@@ -72,6 +86,7 @@ const DoctorsPage: React.FC = () => {
                         ))}
                     </select>
                 </div>
+
                 <div className="space-y-4">
                     {paginatedDoctors.map((doc) => (
                         <DoctorCard key={doc.id} doctorId={doc.id.toString()} />
@@ -85,17 +100,17 @@ const DoctorsPage: React.FC = () => {
                             onClick={() => setCurrentPage((p) => p - 1)}
                             className="px-3 py-1 border rounded disabled:opacity-50"
                         >
-                            Prev
+                            {t('prev') || 'Prev'}
                         </button>
                         <span>
-                            {currentPage} / {totalPages}
-                        </span>
+              {currentPage} / {totalPages}
+            </span>
                         <button
                             disabled={currentPage === totalPages}
                             onClick={() => setCurrentPage((p) => p + 1)}
                             className="px-3 py-1 border rounded disabled:opacity-50"
                         >
-                            Next
+                            {t('next') || 'Next'}
                         </button>
                     </div>
                 )}

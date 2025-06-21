@@ -7,7 +7,7 @@ const api = axios.create({
 });
 
 export const refreshAccessToken = async (refreshToken: string) => {
-    const response = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken });
+    const response = await axios.post(`/auth/refresh`, { refreshToken });
     return response.data.accessToken;
 };
 

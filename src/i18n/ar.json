@@ -70,6 +70,13 @@
   "noAvailableTimes": "لا توجد مواعيد متاحة.",
   "confirmReschedule": "تأكيد إعادة الحجز",
   "phone": "رقم الجوال",
-  "addDrug": "أضافة دواء"
+  "addDrug": "أضافة دواء",
+  "myDrug":"أدويتي",
+  "drug": "أدوية",
+  "myDrugs": "أدويتي",
+  "noDrugsFound": "لم يتم العثور على أي أدوية.",
+  "frequency": "عدد الجرعات",
+  "dosage": "الجرعة",
+  "startDate": "تاريخ البدء"
 
 }

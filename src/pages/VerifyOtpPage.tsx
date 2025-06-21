@@ -14,7 +14,7 @@ const VerifyOtpPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch(`${BASE_URL}/auth/verfiy-otp`, {
+            const res = await fetch(`${BASE_URL}/auth/verify-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, otp }),
