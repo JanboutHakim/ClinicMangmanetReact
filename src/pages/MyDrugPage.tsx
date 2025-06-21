@@ -4,6 +4,8 @@ import { useAuth } from "../contexts/ContextsAuth";
 import { useTranslation } from "react-i18next";
 import api from "../services/api";
 import { API_ENDPOINTS } from "../constants/apiConfig";
+import { useNavigate } from 'react-router-dom';
+import { COLORS } from '../constants/theme';
 
 interface MyDrug {
     id: number;
@@ -20,6 +22,7 @@ interface MyDrug {
 function MyDrugPage() {
     const { user, accessToken } = useAuth();
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [drugs, setDrugs] = useState<MyDrug[]>([]);
 
     useEffect(() => {
@@ -56,6 +59,13 @@ function MyDrugPage() {
                     </ul>
                 )}
             </div>
+            <button
+                onClick={() => navigate('/add-drug')}
+                className="fixed bottom-6 right-6 flex items-center gap-2 px-5 py-3 rounded-full shadow-lg text-white font-medium text-sm hover:opacity-90 transition"
+                style={{ backgroundColor: COLORS.secondary }}
+            >
+                <span className="text-xl">+</span> {t('addDrug')}
+            </button>
         </>
     );
 }
