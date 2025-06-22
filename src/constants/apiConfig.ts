@@ -2,7 +2,9 @@ export const BASE_URL = 'http://localhost:8080';
 
 export const API_ENDPOINTS = {
   doctors: '/doctors',
+  patients: '/patients',
   drugs:'/drugs',
+  appointments: '/appointments',
   doctorAppointments: (id: number | string) => `/doctors/${id}/appointments`,
   doctor: (id: number | string) => `/doctors/${id}`,
   availableSlots: (id: number | string) => `/appointments/doctor/${id}/available-slots`,
@@ -11,4 +13,5 @@ export const API_ENDPOINTS = {
     patientId: number | string,
   ) => `/appointments/${id}/patient/${patientId}/appointments`,
   bookAppointment: (userId: number | string) => `/appointments/${userId}`,
+  appointmentsByDoctor: (id: number | string) => `/appointments/${id}/doctor`,
 };

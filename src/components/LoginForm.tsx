@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LabeledInput from './LabeledInput';
 import Button from './Button';
-import { BASE_URL } from "../constants/apiConfig";
-import { useNavigate } from "react-router-dom";
+import { BASE_URL } from '../constants/apiConfig';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/ContextsAuth';
+
 type Props = {
     onSwitch: () => void;
 };
@@ -13,6 +14,7 @@ type Props = {
 const LoginForm: React.FC<Props> = ({ onSwitch }) => {
     const { t } = useTranslation();
     const [formData, setFormData] = useState({ username: '', password: '' });
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
 
@@ -22,24 +24,43 @@ const LoginForm: React.FC<Props> = ({ onSwitch }) => {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError('');
         try {
-            const res = await fetch(`/auth/login`, {
+            const res = await fetch(`${BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
 
-            if (!res.ok) throw new Error('Login failed');
+            if (!res.ok) {
+                const err = await res.text();
+                throw new Error(err || 'Login failed');
+            }
+
             const data = await res.json();
-            login(data);
-            navigate('/');
-        } catch {
-            alert('Login failed');
+            login(data); // save user in context
+            console.log(data.user.role)
+            // Navigate based on user role
+            if (data.user.role == 'DOCTOR') {
+                navigate('/doctor-home');
+            } else if (data.user.role == 'PATIENT') {
+                navigate('/');
+            } else {
+                navigate('/');
+            }
+
+        } catch (err: any) {
+            setError(err.message || 'Login failed');
         }
     };
 
     return (
         <form onSubmit={handleLogin} className="space-y-4">
+            {error && (
+                <div className="text-red-600 bg-red-100 p-2 rounded text-sm">
+                    {error}
+                </div>
+            )}
             <LabeledInput
                 label={t('username')}
                 name="username"
@@ -60,8 +81,12 @@ const LoginForm: React.FC<Props> = ({ onSwitch }) => {
             </Button>
 
             <p className="text-sm text-center mt-4">
-                {t('dontHaveAccount')} {' '}
-                <button type="button"  onClick={onSwitch} className="text-blue-600 hover:underline">
+                {t('dontHaveAccount')}{' '}
+                <button
+                    type="button"
+                    onClick={onSwitch}
+                    className="text-blue-600 hover:underline"
+                >
                     {t('signup')}
                 </button>
             </p>

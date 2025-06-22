@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
-import { useAuth } from '../contexts/ContextsAuth';
+import Navbar from '../../components/Navbar';
+import { useAuth } from '../../contexts/ContextsAuth';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {BASE_URL} from "../constants/apiConfig";
+import {BASE_URL} from "../../constants/apiConfig";
 
 const ProfilePage: React.FC = () => {
     const { user, logout } = useAuth();

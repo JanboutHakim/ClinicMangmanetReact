@@ -42,10 +42,10 @@ const Navbar: React.FC = () => {
                 </button>
                 {user ? (
                     <>
-                        <a href="/myDrug" className="hover:underline">
+                        <a href="/my-drug" className="hover:underline">
                             {t('myDrug')}
                         </a>
-                        <Link to="/add-drug" className="hover:underline">
+                        <Link to="/drugs" className="hover:underline">
                             {t('addDrug')}
                         </Link>
                         <Link to="/my-appointments" className="hover:underline">

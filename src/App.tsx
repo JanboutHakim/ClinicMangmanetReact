@@ -5,15 +5,16 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import { useTranslation } from 'react-i18next';
 import DoctorsPage from './pages/DoctorsPage';
-import AppointmentBookingPage from './pages/AppointmentBookingPage';
-import BookingPage from './pages/BookingPage';
+import AppointmentBookingPage from './pages/PatientPage/AppointmentBookingPage';
+import BookingPage from './pages/PatientPage/BookingPage';
 import AppointmentsPage from './pages/AppointmentsPage';
-import ProfilePage from './pages/ProfilePage';
+import ProfilePage from './pages/PatientPage/ProfilePage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DrugPage from "./pages/DrugPage";
-import AddDrugPage from './pages/AddDrugPage';
+import AddDrugPage from './pages/PatientPage/AddDrugPage';
 import VerifyOtpPage from './pages/VerifyOtpPage';
-import MyDrugPage from "./pages/MyDrugPage";
+import MyDrugPage from "./pages/PatientPage/MyDrugPage";
+import DoctorHomePage from "./pages/DoctorPage/DoctorHomePage";
 
 const App: React.FC = () => {
     const { accessToken, refreshToken, login, logout } = useAuth();
@@ -42,7 +43,8 @@ const App: React.FC = () => {
             <Route path="/drugs" element={<DrugPage />} />
             <Route path="/add-drug" element={<AddDrugPage />} />
             <Route path="/verify-otp" element={<VerifyOtpPage />} />
-            <Route path="/myDrug" element={<MyDrugPage />}/>
+            <Route path="/my-drug" element={<MyDrugPage />}/>
+            <Route path="/doctor-home" element={<DoctorHomePage/>}/>
         </Routes>
     </Router>
     );

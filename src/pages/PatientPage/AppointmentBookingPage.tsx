@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
-import api from '../services/api';
-import { API_ENDPOINTS } from '../constants/apiConfig';
-import { useAuth } from '../contexts/ContextsAuth';
-import Navbar from '../components/Navbar';
+import api from '../../services/api';
+import { API_ENDPOINTS } from '../../constants/apiConfig';
+import { useAuth } from '../../contexts/ContextsAuth';
+import Navbar from '../../components/Navbar';
 import { useTranslation } from 'react-i18next';
 
 const AppointmentBookingPage: React.FC = () => {

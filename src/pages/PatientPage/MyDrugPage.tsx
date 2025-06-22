@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from "../components/Navbar";
-import { useAuth } from "../contexts/ContextsAuth";
+import Navbar from "../../components/Navbar";
+import { useAuth } from "../../contexts/ContextsAuth";
 import { useTranslation } from "react-i18next";
-import api from "../services/api";
-import { API_ENDPOINTS } from "../constants/apiConfig";
+import api from "../../services/api";
+import { API_ENDPOINTS } from "../../constants/apiConfig";
 import { useNavigate } from 'react-router-dom';
-import { COLORS } from '../constants/theme';
+import { COLORS } from '../../constants/theme';
 
 interface MyDrug {
     id: number;
@@ -60,7 +60,7 @@ function MyDrugPage() {
                 )}
             </div>
             <button
-                onClick={() => navigate('/add-drug')}
+                onClick={() => navigate('/drugs')}
                 className="fixed bottom-6 right-6 flex items-center gap-2 px-5 py-3 rounded-full shadow-lg text-white font-medium text-sm hover:opacity-90 transition"
                 style={{ backgroundColor: COLORS.secondary }}
             >

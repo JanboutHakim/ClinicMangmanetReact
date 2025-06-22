@@ -4,6 +4,8 @@ import SearchBar from '../components/SearchBar';
 import DrugCard, { Drug } from '../components/Drug/DrugCard';
 import api from '../services/api';
 import { API_ENDPOINTS } from '../constants/apiConfig';
+import Button from "../components/Button";
+import {useTranslation} from "react-i18next";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -12,6 +14,7 @@ const DrugPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
+    const {t} =  useTranslation();
 
     useEffect(() => {
         setLoading(true);
@@ -41,10 +44,22 @@ const DrugPage: React.FC = () => {
                 <SearchBar onSearch={setSearchQuery} />
 
                 {loading ? (
-                    <p className="text-center text-sm text-gray-500">Loading drugs...</p>
+                    <p className="text-center text-sm text-gray-500">{t('loading')}</p>
                 ) : drugs.length === 0 ? (
-                    <p className="text-center text-sm text-gray-500">No drugs found.</p>
+                    <div className="text-center space-y-4">
+                        <p className="text-gray-500 text-sm">{t('noDrugFound')}</p>
+                        <Button
+                            onClick={() => {
+                                // Replace with your navigation logic or open modal
+                                window.location.href = '/add-drug';
+                            }}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        >
+                            {t("addNewDrug")}
+                        </Button>
+                    </div>
                 ) : (
+
                     <>
                         <div className="divide-y border rounded bg-white">
                             {paginatedDrugs.map((drug) => (
