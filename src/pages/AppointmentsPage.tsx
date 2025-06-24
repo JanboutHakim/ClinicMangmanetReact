@@ -34,7 +34,7 @@ const AppointmentsPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 const { data } = await api.get(
-                    API_ENDPOINTS.patientAppointments(user.id, user.id),
+                    API_ENDPOINTS.appointmentByPatient(user.id),
                     { headers: { Authorization: `Bearer ${accessToken}` } }
                 );
 
@@ -64,12 +64,12 @@ const AppointmentsPage: React.FC = () => {
         fetchData();
     }, [accessToken, user]);
 
-    const handleCancel = async (appointmentId: number | string, reason: string) => {
+    const handleCancel = async (appointmentId: number | string, name: string) => {
         if (!user) return;
         try {
             await api.put(
                 `/appointments/${user.id}/${appointmentId}/cancel-by-patient`,
-                { reason },
+                { name },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             );
             setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));

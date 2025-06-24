@@ -1,49 +1,111 @@
-// src/components/DoctorNavbar.tsx
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import {LOGO_URL, PROFILE_PIC_URL} from '../../constants/appConfig';
+import { COLORS } from '../../constants/theme';
+import { useAuth } from '../../contexts/ContextsAuth';
 
 interface Props {
     onSelect: (section: string) => void;
     selected: string;
 }
 
-const DoctorNavbar: React.FC<Props> = ({ onSelect, selected }) => {
+const DoctorNavbar: React.FC<Props> = () => {
     const { t, i18n } = useTranslation();
+    const { user } = useAuth();
 
     const toggleLang = () => {
         i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en');
     };
 
-    const links = [
-        { key: 'overview', label: t('overview') },
-        { key: 'visits', label: t('visits') },
-        { key: 'patients', label: t('patients') },
-        { key: 'appointments', label: t('appointments') },
-    ];
+    const toggleTheme = () => {
+        document.documentElement.classList.toggle('dark');
+    };
 
     return (
-        <aside className="w-64 bg-white shadow p-4 space-y-6">
-            <h2 className="text-xl font-bold text-blue-700">{t('menu')}</h2>
-            <nav className="space-y-2">
-                {links.map(link => (
+        <nav
+            className="fixed top-0 w-full z-50 shadow-md"
+            style={{ backgroundColor: COLORS.primary }}
+        >
+            <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between text-white">
+                {/* Left: Logo + Language Switch */}
+                <div className="flex items-center gap-4">
+                    <img src={LOGO_URL} alt="Logo" className="h-10 w-10 rounded-full" />
+                    <span className="text-lg font-semibold">Clinic Dashboard</span>
+                    <div className="relative group">
+                        <button className="flex items-center space-x-1">
+                            <img src="https://flagcdn.com/w20/us.png" alt="EN" className="w-5 h-5 rounded-sm" />
+                            <span className="text-sm">EN</span>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div className="absolute mt-2 w-28 bg-white text-black rounded shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
+                            <button onClick={toggleLang} className="block w-full text-left px-3 py-2 hover:bg-gray-100">
+                                {i18n.language === 'en' ? 'العربية' : 'English'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right: Theme Toggle + User Profile */}
+                <div className="flex items-center gap-6">
+                    {/* Theme Toggle */}
                     <button
-                        key={link.key}
-                        onClick={() => onSelect(link.key)}
-                        className={`block w-full text-left ${
-                            selected === link.key ? 'text-blue-600 font-bold' : 'text-gray-700'
-                        } hover:text-blue-600`}
+                        onClick={toggleTheme}
+                        className="hover:text-yellow-300 transition"
+                        title="Toggle theme"
                     >
-                        {link.label}
+                        <svg
+                            className="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 3v1m0 16v1m8.66-11.66l-.7.7M4.34 4.34l.7.7M21 12h-1M4 12H3m15.66 4.34l-.7-.7M4.34 19.66l.7-.7M12 7a5 5 0 000 10a5 5 0 000-10z"
+                            />
+                        </svg>
                     </button>
-                ))}
-            </nav>
-            <button
-                onClick={toggleLang}
-                className="text-sm text-blue-600 underline mt-10"
-            >
-                {i18n.language === 'en' ? 'العربية' : 'English'}
-            </button>
-        </aside>
+
+                    {/* Profile Dropdown */}
+                    <div className="relative group">
+                        <button className="flex items-center gap-2 focus:outline-none">
+                            <img
+                                src={user?.imageUrl || PROFILE_PIC_URL}
+                                alt="User"
+                                className="w-8 h-8 rounded-full"
+                            />
+                            <span className="text-sm font-medium">{user?.username || 'Doctor'}</span>
+                            <svg
+                                className="w-4 h-4 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M19 9l-7 7-7-7"
+                                />
+                            </svg>
+                        </button>
+
+                        <div className="absolute right-0 mt-2 w-44 bg-white text-black rounded shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
+                            <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                                👤 {t('profile') || 'Profile'}
+                            </a>
+                            <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                                🚪 {t('logout') || 'Logout'}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
     );
 };
 
