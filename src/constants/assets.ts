@@ -8,6 +8,7 @@ export { default as youtubeIcon } from '../assets/youtube.svg';
 export { default as calendarIcon } from '../assets/calendar.svg';
 export { default as chatIcon } from '../assets/chat.svg';
 export { default as heartIcon } from '../assets/heart.svg';
+export {default as profileIcon} from '../assets/profileIcon.png';
 export { default as doctor1 } from '../assets/doctor1.png';
 export { default as doctor2 } from '../assets/doctor2.png';
 export { default as doctor3 } from '../assets/doctor3.png';

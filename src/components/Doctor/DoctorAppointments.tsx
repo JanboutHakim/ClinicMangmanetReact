@@ -6,6 +6,8 @@ export interface Appointment {
     id: number;
     patientId: number;
     doctorId: number;
+    doctorName?: string;
+    patientName?: string;
     startTime: string;
     endTime: string;
     reason: string;
@@ -14,17 +16,15 @@ export interface Appointment {
     cancellationReason: string | null;
     createdAt: string;
     updatedAt: string;
-    patientName?: string;
-    type?: string;
-    ramq?: string;
 }
 
 interface Props {
     data: Appointment[];
     onConfirm?: (appointmentId: number) => void;
+    onCancel?: (appointmentId: number) => void;
 }
 
-const AppointmentTable: React.FC<Props> = ({ data, onConfirm }) => {
+const AppointmentTable: React.FC<Props> = ({ data, onConfirm, onCancel }) => {
     const { t } = useTranslation();
 
     if (data.length === 0) {
@@ -36,52 +36,69 @@ const AppointmentTable: React.FC<Props> = ({ data, onConfirm }) => {
     }
 
     return (
-        <div className="bg-white rounded-lg shadow overflow-x-auto">
-            {/* Header */}
-            <div className="grid grid-cols-7 gap-4 px-4 py-3 font-semibold text-gray-700 border-b text-sm bg-gray-100">
-                <div>{t('date')}</div>
-                <div>{t('time')}</div>
-                <div>{t('type')}</div>
-                <div>{t('ramq')}</div>
-                <div>{t('patientName')}</div>
-                <div>{t('status')}</div>
-                <div className="text-center">{t('actions')}</div>
-            </div>
+        <div className="overflow-x-auto bg-white rounded-lg shadow">
+            <table className="min-w-full text-sm text-left text-gray-800">
+                <thead className="bg-gray-100 uppercase text-xs text-gray-600">
+                <tr>
+                    <th className="px-6 py-3">#</th>
+                    <th className="px-6 py-3">{t('patient')}</th>
+                    <th className="px-6 py-3">{t('doctor')}</th>
+                    <th className="px-6 py-3">{t('date')}</th>
+                    <th className="px-6 py-3">{t('time')}</th>
+                    <th className="px-6 py-3">{t('status')}</th>
+                    <th className="px-6 py-3">{t('actions')}</th>
+                </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                {data.map((appt, index) => {
+                    const date = dayjs(appt.startTime).format('YYYY-MM-DD');
+                    const time = dayjs(appt.startTime).format('h:mm A');
 
-            {/* Rows */}
-            {data.map((a) => {
-                const date = dayjs(a.startTime).format('DD MMM YYYY');
-                const time = dayjs(a.startTime).format('h:mm A');
-                return (
-                    <div
-                        key={a.id}
-                        className="grid grid-cols-7 gap-4 px-4 py-3 items-center text-sm border-b hover:bg-gray-50 transition"
-                    >
-                        <div>{date}</div>
-                        <div>{time}</div>
-                        <div>{a.type || 'FUP'}</div>
-                        <div>{a.ramq || '—'}</div>
-                        <div>{a.patientName || `#${a.patientId}`}</div>
-                        <div className="capitalize">{t(a.status.toLowerCase())}</div>
-                        <div className="flex justify-center gap-2">
-                            {a.status === 'PENDING' && onConfirm && (
-                                <button
-                                    onClick={() => onConfirm(a.id)}
-                                    className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700"
-                                >
-                                    {t('confirm')}
-                                </button>
-                            )}
-                            {a.status === 'CONFIRMED' && (
-                                <button className="bg-gray-600 text-white px-3 py-1 rounded text-xs hover:bg-gray-700">
-                                    {t('reschedule')}
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                );
-            })}
+                    return (
+                        <tr key={appt.id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 font-medium">{index + 1}</td>
+                            <td className="px-6 py-4">{appt.patientName || `#${appt.patientId}`}</td>
+                            <td className="px-6 py-4">{appt.doctorName || `#${appt.doctorId}`}</td>
+                            <td className="px-6 py-4">{date}</td>
+                            <td className="px-6 py-4">{time}</td>
+                            <td className="px-6 py-4">
+                  <span
+                      className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
+                          appt.status === 'CONFIRMED'
+                              ? 'text-green-700 bg-green-100'
+                              : appt.status === 'PENDING'
+                                  ? 'text-yellow-700 bg-yellow-100'
+                                  : 'text-red-700 bg-red-100'
+                      }`}
+                  >
+                    {t(appt.status.toLowerCase())}
+                  </span>
+                            </td>
+                            <td className="px-6 py-4 space-x-2">
+                                {appt.status === 'ON_HOLD' && (
+                                    <button
+                                        onClick={() => onConfirm?.(appt.id)}
+                                        className="text-blue-600 hover:underline"
+                                    >
+                                        {t('confirm')}
+                                    </button>
+                                )}
+                                {appt.status === 'CONFIRMED' || appt.status === 'ON_HOLD'&& (
+                                    <button
+                                        onClick={() => onCancel?.(appt.id)}
+                                        className="text-red-600 hover:underline"
+                                    >
+                                        {t('cancel')}
+                                    </button>
+                                )}
+                            </td>
+                        </tr>
+                    );
+                })}
+                </tbody>
+            </table>
         </div>
+
     );
 };
 
