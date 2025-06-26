@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
-import { API_ENDPOINTS } from '../../constants/apiConfig';
+import { getDoctor, getAvailableSlots } from '../../services/doctorService';
 import dayjs from "dayjs";
 
 interface DoctorData {
@@ -26,21 +25,19 @@ const DoctorCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
     const [showAll, setShowAll] = useState(false);
 
     useEffect(() => {
-        api
-            .get(API_ENDPOINTS.doctor(doctorId))
-            .then((res) => setDoctor(res.data))
+        getDoctor(doctorId)
+            .then(setDoctor)
             .catch((err) => console.error('Doctor fetch error:', err));
 
-        api
-            .get(API_ENDPOINTS.availableSlots(doctorId))
+        getAvailableSlots(doctorId)
             .then((res) => {
-                const rawSlots: string[] = Array.isArray(res.data) ? res.data : [];
+                const rawSlots: string[] = Array.isArray(res) ? res : [];
                 const grouped: { [key: string]: string[] } = {};
 
                 rawSlots.forEach((datetime) => {
                     const [date, time] = datetime.split('T');
                     if (!grouped[date]) grouped[date] = [];
-                    grouped[date].push(time.slice(0, 5)); // "09:00:00" → "09:00"
+                    grouped[date].push(time.slice(0, 5));
                 });
 
                 const groupedArray: GroupedSlots[] = Object.entries(grouped).map(([date, times]) => ({

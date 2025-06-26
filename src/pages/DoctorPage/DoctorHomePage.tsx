@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DoctorNavbar from '../../components/Doctor/DoctorNavbar';
-import { API_ENDPOINTS } from '../../constants/apiConfig';
-import api from '../../services/api';
+import { getAppointmentsByDoctor, confirmAppointment } from '../../services/appointmentService';
 import { useAuth } from '../../contexts/ContextsAuth';
 import AppointmentTable, {Appointment} from "../../components/Doctor/DoctorAppointments";
 
@@ -15,24 +14,15 @@ const DoctorDashboard: React.FC = () => {
 
     useEffect(() => {
         if (!user) return;
-        api
-            .get(API_ENDPOINTS.appointmentsByDoctor(user.id), {
-                headers: { Authorization: `Bearer ${accessToken}` },
-            })
-            .then((res) => setAppointments(res.data))
+        getAppointmentsByDoctor(user.id, accessToken!)
+            .then(setAppointments)
             .catch((err) => console.error('Appointments fetch error:', err));
     }, [user, accessToken]);
 
     const handleConformation = async (appointmentId: number) => {
         if (!user || !accessToken) return;
         try {
-            const response = await api.put(
-                `/appointments/${user.id}/confirm/${appointmentId}`,
-                null,
-                { headers: { Authorization: `Bearer ${accessToken}` } }
-            );
-
-            const updated = response.data;
+            const updated = await confirmAppointment(user.id, appointmentId, accessToken!);
             setAppointments((prev) =>
                 prev.map((appt) => (appt.id === updated.id ? updated : appt))
             );

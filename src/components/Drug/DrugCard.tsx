@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/ContextsAuth';
-import api from '../../services/api';
-import {API_ENDPOINTS} from "../../constants/apiConfig";
+import { addDrugToPatient } from '../../services/drugService';
 
 export interface Drug {
     drugId: number;
@@ -27,15 +26,13 @@ const DrugCard: React.FC<DrugCardProps> = ({ drug }) => {
 
         setLoading(true);
         try {
-            await api.post(
-                `${API_ENDPOINTS.patients}/${user.id}/drugs`,
+            await addDrugToPatient(
+                user.id,
                 {
                     drugId: drug.drugId,
                     frequency: Number(frequency)
                 },
-                {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                }
+                accessToken!
             );
             alert('✅ Drug added successfully');
             setShowModal(false);

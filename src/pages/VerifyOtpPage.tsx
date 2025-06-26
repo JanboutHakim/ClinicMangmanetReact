@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import LabeledInput from '../components/LabeledInput';
 import Button from '../components/Button';
-import { BASE_URL } from '../constants/apiConfig';
+import { verifyOtp } from '../services/authService';
 
 const VerifyOtpPage: React.FC = () => {
     const location = useLocation();
@@ -14,14 +14,7 @@ const VerifyOtpPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch(`${BASE_URL}/auth/verify-otp`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, otp }),
-            });
-
-            if (!res.ok) throw new Error('Verification failed');
-
+            await verifyOtp(username, otp);
             alert('Account verified!');
             navigate('/login');
         } catch {

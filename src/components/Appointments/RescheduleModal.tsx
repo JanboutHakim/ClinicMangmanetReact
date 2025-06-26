@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../services/api';
-import { API_ENDPOINTS } from '../../constants/apiConfig';
+import { getDoctor, getAvailableSlots } from '../../services/doctorService';
+import { rescheduleAppointment } from '../../services/appointmentService';
 import { useAuth } from '../../contexts/ContextsAuth';
 
 interface RescheduleModalProps {
@@ -42,21 +42,13 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
     useEffect(() => {
         if (!user || !accessToken) return;
 
-        // Fetch doctor info
-        api
-            .get(API_ENDPOINTS.doctor(doctorId), {
-                headers: { Authorization: `Bearer ${accessToken}` },
-            })
-            .then((res) => setDoctor(res.data))
+        getDoctor(doctorId, accessToken)
+            .then(setDoctor)
             .catch((err) => console.error('Doctor fetch error:', err));
 
-        // Fetch available slots
-        api
-            .get(API_ENDPOINTS.availableSlots(doctorId), {
-                headers: { Authorization: `Bearer ${accessToken}` },
-            })
+        getAvailableSlots(doctorId, accessToken)
             .then((res) => {
-                const rawSlots: string[] = Array.isArray(res.data) ? res.data : [];
+                const rawSlots: string[] = Array.isArray(res) ? res : [];
                 const grouped: { [key: string]: string[] } = {};
 
                 rawSlots.forEach((datetime) => {
@@ -86,9 +78,10 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
         if (!selected || !user || !accessToken) return;
 
         try {
-            await api.put(
-                `/appointments/${user.id}/reschedule/${appointmentId}`,
-                {   id: appointmentId,
+            await rescheduleAppointment(
+                user.id,
+                appointmentId,
+                {
                     patientId: user.id,
                     doctorId,
                     startTime: selected,
@@ -96,9 +89,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                     notes: 'Patient reports mild headache',
                     cancellationReason: null,
                 },
-                {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                }
+                accessToken!
             );
             onSuccess();
             onClose();

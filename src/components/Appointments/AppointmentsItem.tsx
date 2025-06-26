@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { useAuth } from '../../contexts/ContextsAuth';
-import api from '../../services/api';
-import { API_ENDPOINTS } from '../../constants/apiConfig';
+import { getAppointmentsByPatient, cancelAppointment } from '../../services/appointmentService';
+import { getDoctor } from '../../services/doctorService';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
@@ -32,21 +32,15 @@ const AppointmentsPage: React.FC = () => {
         if (!user) return;
         const fetchData = async () => {
             try {
-                const { data } = await api.get(
-                    API_ENDPOINTS.patientAppointments(user.id, user.id),
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
-                );
+                const data = await getAppointmentsByPatient(user.id, accessToken!);
 
                 const withDoctors = await Promise.all(
                     data.map(async (appt: Appointment) => {
                         try {
-                            const res = await api.get(
-                                API_ENDPOINTS.doctor(appt.doctorId),
-                                { headers: { Authorization: `Bearer ${accessToken}` } }
-                            );
+                            const res = await getDoctor(appt.doctorId, accessToken!);
                             return {
                                 ...appt,
-                                doctorName: res.data.clinicName ?? res.data.fullName,
+                                doctorName: res.clinicName ?? res.fullName,
                             };
                         } catch {
                             return { ...appt };
@@ -66,11 +60,7 @@ const AppointmentsPage: React.FC = () => {
     const handleCancel = async (appointmentId: number | string) => {
         if (!user) return;
         try {
-            await api.post(
-                `/appointments/${user.id}/${appointmentId}/cancel-by-patient`,
-                null,
-                { headers: { Authorization: `Bearer ${accessToken}` } }
-            );
+            await cancelAppointment(user.id, appointmentId, '', accessToken!);
             setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
         } catch (err) {
             console.error(err);

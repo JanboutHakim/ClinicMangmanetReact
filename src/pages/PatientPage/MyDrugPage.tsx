@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from "../../components/Navbar";
 import { useAuth } from "../../contexts/ContextsAuth";
 import { useTranslation } from "react-i18next";
-import api from "../../services/api";
-import { API_ENDPOINTS } from "../../constants/apiConfig";
+import { getPatientDrugs } from '../../services/drugService';
 import { useNavigate } from 'react-router-dom';
 import { COLORS } from '../../constants/theme';
 
@@ -28,11 +27,8 @@ function MyDrugPage() {
     useEffect(() => {
         if (!user) return;
 
-        api
-            .get(`/patients/${user.id}/drugs`, {
-                headers: { Authorization: `Bearer ${accessToken}` },
-            })
-            .then((res) => setDrugs(res.data))
+        getPatientDrugs(user.id, accessToken!)
+            .then(setDrugs)
             .catch((err) => console.error('Failed to load user drugs:', err));
     }, [user, accessToken]);
 

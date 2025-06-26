@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 import DrugCard, { Drug } from '../components/Drug/DrugCard';
-import api from '../services/api';
-import { API_ENDPOINTS } from '../constants/apiConfig';
+import { getDrugs } from '../services/drugService';
 import Button from "../components/Button";
 import {useTranslation} from "react-i18next";
 
@@ -18,14 +17,10 @@ const DrugPage: React.FC = () => {
 
     useEffect(() => {
         setLoading(true);
-        const endpoint = searchQuery
-            ? `${API_ENDPOINTS.drugs}/search?q=${encodeURIComponent(searchQuery)}`
-            : API_ENDPOINTS.drugs;
-
-        api.get(endpoint)
-            .then((res) => {
-                setDrugs(res.data);
-                setCurrentPage(1); // reset to page 1 on new search
+        getDrugs(searchQuery)
+            .then((data) => {
+                setDrugs(data);
+                setCurrentPage(1);
             })
             .catch((err) => console.error('Drug fetch failed', err))
             .finally(() => setLoading(false));
