@@ -1,8 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {LOGO_URL, PROFILE_PIC_URL} from '../../constants/appConfig';
+import {LOGO_URL} from '../../constants/appConfig';
 import { COLORS } from '../../constants/theme';
 import { useAuth } from '../../contexts/ContextsAuth';
+import {profileIcon} from "../../constants/assets";
 
 interface Props {
     onSelect: (section: string) => void;
@@ -74,7 +75,7 @@ const DoctorNavbar: React.FC<Props> = () => {
                     <div className="relative group">
                         <button className="flex items-center gap-2 focus:outline-none">
                             <img
-                                src={user?.imageUrl || PROFILE_PIC_URL}
+                                src={user?.imageUrl || profileIcon}
                                 alt="User"
                                 className="w-8 h-8 rounded-full"
                             />

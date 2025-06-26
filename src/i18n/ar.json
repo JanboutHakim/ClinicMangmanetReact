@@ -109,5 +109,7 @@
   "reason": "السبب",
   "notes": "ملاحظات",
   "on_hold": "قيد الانتظار",
-  "myAppointments": "مواعيدي"
+  "myAppointments": "مواعيدي",
+  "address": "عنوان",
+  "noPatients": "لا يوجد مرضى"
 }

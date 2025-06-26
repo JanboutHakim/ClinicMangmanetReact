@@ -111,7 +111,11 @@
   "comingSoon": "Coming soon...",
   "reason": "Reason",
   "notes": "Notes",
-  "on_hold": "On Hold"
+  "on_hold": "On Hold",
+  "address": "Address",
+  "noPatients": "No patients found."
+
+
 
 
 
