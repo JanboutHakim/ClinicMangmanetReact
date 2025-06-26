@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Navbar from '../../components/Navbar';
-import api from '../../services/api';
-import { API_ENDPOINTS } from '../../constants/apiConfig';
+import { getDoctor } from '../../services/doctorService';
+import { bookAppointment } from '../../services/appointmentService';
 import { useAuth } from '../../contexts/ContextsAuth';
 import { useTranslation } from 'react-i18next';
 
@@ -30,11 +30,8 @@ const BookingPage: React.FC = () => {
 
     useEffect(() => {
         if (!doctorId) return;
-        api
-            .get(API_ENDPOINTS.doctor(doctorId), {
-                headers: { Authorization: `Bearer ${accessToken}` },
-            })
-            .then((res) => setDoctor(res.data))
+        getDoctor(doctorId, accessToken!)
+            .then(setDoctor)
             .catch((err) => console.error(err));
     }, [doctorId, accessToken]);
 
@@ -54,9 +51,7 @@ const BookingPage: React.FC = () => {
         };
 
         try {
-            await api.post(API_ENDPOINTS.bookAppointment(user.id), body, {
-                headers: { Authorization: `Bearer ${accessToken}` },
-            });
+            await bookAppointment(user.id, body, accessToken!);
             navigate('/my-appointments');
         } catch (err) {
             console.error(err);

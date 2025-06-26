@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import api from '../../services/api';
 import { useAuth } from '../../contexts/ContextsAuth';
-import { API_ENDPOINTS } from '../../constants/apiConfig';
+import { addDrugToPatient } from '../../services/drugService';
 import { COLORS } from '../../constants/theme';
 
 const AddDrugPage: React.FC = () => {
@@ -25,21 +24,14 @@ const AddDrugPage: React.FC = () => {
             return;
         }
 
-        const body = {
-            patientId: user.id,
-            drugName,
-            frequency: Number(frequency),
-            startDate: startDate || null,
-            endDate: endDate || null,
-            dosage: dosage || null,
-            drugStatus: null,
-            drugAlarms: []
-        };
-
         try {
-            await api.post(`${API_ENDPOINTS.patients}/${user.id}/drugs`, body, {
-                headers: { Authorization: `Bearer ${accessToken}` }
-            });
+            await addDrugToPatient(user.id, {
+                drugName,
+                frequency: Number(frequency),
+                startDate: startDate || null,
+                endDate: endDate || null,
+                dosage: dosage || null,
+            }, accessToken!);
             alert(t('addSuccess'));
             navigate('/my-drugs');
         } catch (err) {

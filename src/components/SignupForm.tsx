@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LabeledInput from './LabeledInput';
 import Button from './Button';
-import { BASE_URL } from "../constants/apiConfig";
+import { signupUser } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
@@ -56,13 +56,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
         };
 
         try {
-            const res = await fetch(`${BASE_URL}/auth/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
-
-            if (!res.ok) throw new Error('Signup failed');
+            await signupUser(payload);
 
             alert('Account created!');
             navigate('/verify-otp', {

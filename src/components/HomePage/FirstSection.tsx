@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import { COLORS } from "../../constants/theme";
 import SearchBar from "../SearchBar";
 import { useState, useEffect } from "react";
-import api from "../../services/api";
-import { API_ENDPOINTS } from "../../constants/apiConfig";
+import { getDoctors } from '../../services/doctorService';
 import DoctorList from "../Doctor/DoctorList";
 
 interface Doctor {
@@ -31,12 +30,10 @@ const FirstSection = () => {
             }
 
             try {
-                const res = await api.get(`${API_ENDPOINTS.doctors}/search?q=${encodeURIComponent(searchQuery)}`, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                });
-                setResults(res.data);
+                const res = await getDoctors(searchQuery, undefined, accessToken!);
+                setResults(res);
             } catch (err) {
-                console.error("Search failed", err);
+                console.error('Search failed', err);
                 setResults([]);
             }
         };

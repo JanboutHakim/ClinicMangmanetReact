@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LabeledInput from './LabeledInput';
 import Button from './Button';
-import { BASE_URL } from '../constants/apiConfig';
+import { loginUser } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/ContextsAuth';
 
@@ -26,18 +26,7 @@ const LoginForm: React.FC<Props> = ({ onSwitch }) => {
         e.preventDefault();
         setError('');
         try {
-            const res = await fetch(`${BASE_URL}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
-
-            if (!res.ok) {
-                const err = await res.text();
-                throw new Error(err || 'Login failed');
-            }
-
-            const data = await res.json();
+            const data = await loginUser(formData);
             login(data); // save user in context
             console.log(data.user.role)
             // Navigate based on user role

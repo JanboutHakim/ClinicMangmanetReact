@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../contexts/ContextsAuth';
-import api from '../services/api';
-import { API_ENDPOINTS } from '../constants/apiConfig';
+import { getAppointmentsByPatient, cancelAppointment } from '../services/appointmentService';
+import { getDoctor } from '../services/doctorService';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AppointmentCard from "../components/Appointments/AppointmentCard";
@@ -33,21 +33,15 @@ const AppointmentsPage: React.FC = () => {
         if (!user) return;
         const fetchData = async () => {
             try {
-                const { data } = await api.get(
-                    API_ENDPOINTS.appointmentByPatient(user.id),
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
-                );
+                const data = await getAppointmentsByPatient(user.id, accessToken!);
 
                 const withDoctors = await Promise.all(
                     data.map(async (appt: Appointment) => {
                         try {
-                            const res = await api.get(
-                                API_ENDPOINTS.doctor(appt.doctorId),
-                                { headers: { Authorization: `Bearer ${accessToken}` } }
-                            );
+                            const res = await getDoctor(appt.doctorId, accessToken!);
                             return {
                                 ...appt,
-                                doctorName: res.data.clinicName ?? res.data.fullName,
+                                doctorName: res.clinicName ?? res.fullName,
                             };
                         } catch {
                             return { ...appt };
@@ -67,11 +61,7 @@ const AppointmentsPage: React.FC = () => {
     const handleCancel = async (appointmentId: number | string, name: string) => {
         if (!user) return;
         try {
-            await api.put(
-                `/appointments/${user.id}/${appointmentId}/cancel-by-patient`,
-                { name },
-                { headers: { Authorization: `Bearer ${accessToken}` } }
-            );
+            await cancelAppointment(user.id, appointmentId, name, accessToken!);
             setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
         } catch (err) {
             console.error(err);

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../services/api';
-import { API_ENDPOINTS } from '../constants/apiConfig';
+import { getDoctors } from '../services/doctorService';
 import { useAuth } from '../contexts/ContextsAuth';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
@@ -24,25 +23,11 @@ const DoctorsPage: React.FC = () => {
     const { t } = useTranslation();
 
     useEffect(() => {
-        const fetchDoctors = async () => {
+        const fetchDoctorsData = async () => {
             try {
-                const params = new URLSearchParams();
-                if (search) params.append('q', search);
-                if (specialtyFilter) params.append('specialty', specialtyFilter);
-
-                const endpoint =
-                    search || specialtyFilter
-                        ? `${API_ENDPOINTS.doctors}/search?${params.toString()}`
-                        : API_ENDPOINTS.doctors;
-
-                const res = await api.get(endpoint, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                });
-
-                console.log('Fetched doctors:', res.data);
-
-                const data = Array.isArray(res.data) ? res.data : res.data?.doctors || [];
-                setDoctors(data);
+                const data = await getDoctors(search, specialtyFilter, accessToken!);
+                const doctorsArray = Array.isArray(data) ? data : data?.doctors || [];
+                setDoctors(doctorsArray);
                 setCurrentPage(1);
             } catch (err) {
                 console.error('Failed to fetch doctors:', err);
@@ -50,7 +35,7 @@ const DoctorsPage: React.FC = () => {
             }
         };
 
-        fetchDoctors();
+        fetchDoctorsData();
     }, [accessToken, search, specialtyFilter]);
 
     const specialties = Array.from(

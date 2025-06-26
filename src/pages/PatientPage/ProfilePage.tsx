@@ -3,8 +3,7 @@ import Navbar from '../../components/Navbar';
 import { useAuth } from '../../contexts/ContextsAuth';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import {BASE_URL} from "../../constants/apiConfig";
+import { uploadProfileImage } from '../../services/userService';
 
 const ProfilePage: React.FC = () => {
     const { user, logout } = useAuth();
@@ -31,15 +30,10 @@ const ProfilePage: React.FC = () => {
     const handleUpload = async () => {
         if (!selectedFile || !user) return;
 
-        const formData = new FormData();
-        formData.append("image", selectedFile);
-
         try {
-            const response = await axios.post(`${BASE_URL}/users/${user.id}/addImage`, formData, {
-                headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${accessToken}`  }
-            });
+            const response = await uploadProfileImage(user.id, selectedFile, accessToken!);
             setUploadMessage("Image uploaded successfully!");
-            setImageUrl(response.data); // path returned from backend
+            setImageUrl(response); // path returned from backend
         } catch (error) {
             setUploadMessage("Image upload failed.");
             console.error(error);
