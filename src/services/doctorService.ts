@@ -39,3 +39,24 @@ export const handleAddSchedules = async (
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
   });
 };
+
+export const updateSchedule = async (
+    doctorId: number | string,
+    scheduleId: number | string,
+    schedule: ScheduleEntry,
+    token?: string
+) => {
+  await api.put(`${API_ENDPOINTS.doctorSchedules(doctorId)}/${scheduleId}`, schedule, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+};
+
+export const deleteSchedule = async (
+    doctorId: number | string,
+    scheduleId: number | string,
+    token?: string
+) => {
+  await api.delete(`${API_ENDPOINTS.doctorSchedules(doctorId)}/${scheduleId}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+};

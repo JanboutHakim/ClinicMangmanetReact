@@ -12,7 +12,7 @@ import {API_ENDPOINTS} from "../../constants/apiConfig";
 import api from "../../services/api";
 import DoctorSidebar from "../../components/Doctor/DoctorSidebar";
 import DoctorScheduleTable, {ScheduleEntry} from "../../components/Doctor/DoctorScheduleTable";
-import {handleAddSchedules} from "../../services/doctorService";
+import {handleAddSchedules, updateSchedule, deleteSchedule} from "../../services/doctorService";
 
 const DoctorDashboard: React.FC = () => {
     const { t } = useTranslation();
@@ -79,6 +79,33 @@ const DoctorDashboard: React.FC = () => {
             setSchedules((prev) => [...prev, formattedSchedule]);
         } catch (err) {
             console.error("❌ Failed to add schedule:", err);
+        }
+    };
+
+    const handleUpdateSchedule = async (updated: ScheduleEntry) => {
+        if (!user || !accessToken || !updated.id) return;
+
+        const formatted: ScheduleEntry = {
+            ...updated,
+            startTime: updated.startTime ? `${updated.startTime}:00` : undefined,
+            endTime: updated.endTime ? `${updated.endTime}:00` : undefined,
+        };
+
+        try {
+            await updateSchedule(user.id, updated.id, formatted, accessToken);
+            setSchedules((prev) => prev.map((s) => (s.id === updated.id ? { ...s, ...formatted } : s)));
+        } catch (err) {
+            console.error('❌ Failed to update schedule:', err);
+        }
+    };
+
+    const handleDeleteSchedule = async (scheduleId: number) => {
+        if (!user || !accessToken) return;
+        try {
+            await deleteSchedule(user.id, scheduleId, accessToken);
+            setSchedules((prev) => prev.filter((s) => s.id !== scheduleId));
+        } catch (err) {
+            console.error('❌ Failed to delete schedule:', err);
         }
     };
 
@@ -178,7 +205,12 @@ const DoctorDashboard: React.FC = () => {
             case 'schedules'  :
                 return (<>
                     <h1 className="text-2xl font-bold mb-4">{t('schedules')}</h1>
-                    <DoctorScheduleTable data={schedules} onAddHoliday={handleAddSchedule}/>
+                    <DoctorScheduleTable
+                        data={schedules}
+                        onAddHoliday={handleAddSchedule}
+                        onUpdate={handleUpdateSchedule}
+                        onDelete={handleDeleteSchedule}
+                    />
                 </>);
             default:
                 return <h1 className="text-2xl font-bold">{t('overview')}</h1>;

@@ -132,7 +132,11 @@
   "day": "Day",
   "startTime": "Start Time",
   "endTime": "End Time",
-  "add": "Add"
+  "add": "Add",
+  "edit": "Edit",
+  "delete": "Delete",
+  "update": "Update",
+  "editSchedule": "Edit Schedule"
 
 
 
