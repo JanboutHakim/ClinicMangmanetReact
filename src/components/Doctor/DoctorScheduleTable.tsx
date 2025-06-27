@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import {useTranslation} from "react-i18next";
 
 export interface ScheduleEntry {
+    id?: number;
     dayOfWeek: string;
     startTime?: string;
     endTime?: string;
@@ -11,28 +12,44 @@ export interface ScheduleEntry {
 
 interface Props {
     data: ScheduleEntry[];
-    onAddHoliday: (entry: ScheduleEntry) => void; // Callback to parent
+    onAddHoliday: (entry: ScheduleEntry) => void;
+    onDelete: (id: number) => void;
+    onUpdate: (entry: ScheduleEntry) => void;
 }
 
 const formatTime = (time?: string) => {
     return time ? dayjs(`1970-01-01T${time}`).format('hh:mm A') : '';
 };
 
-const DoctorScheduleTable: React.FC<Props> = ({ data, onAddHoliday }) => {
+const DoctorScheduleTable: React.FC<Props> = ({ data, onAddHoliday, onDelete, onUpdate }) => {
     const [showModal, setShowModal] = useState(false);
+    const [editEntry, setEditEntry] = useState<ScheduleEntry | null>(null);
     const [dayOfWeek, setDayOfWeek] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const {t} =useTranslation();
 
     const handleSubmit = () => {
-        if (dayOfWeek) {
-            onAddHoliday({ dayOfWeek, startTime, endTime });
-            setShowModal(false);
-            setDayOfWeek('');
-            setStartTime('');
-            setEndTime('');
+        if (!dayOfWeek) return;
+        const entry: ScheduleEntry = { id: editEntry?.id, dayOfWeek, startTime, endTime };
+        if (editEntry) {
+            onUpdate(entry);
+        } else {
+            onAddHoliday(entry);
         }
+        setShowModal(false);
+        setDayOfWeek('');
+        setStartTime('');
+        setEndTime('');
+        setEditEntry(null);
+    };
+
+    const openEdit = (entry: ScheduleEntry) => {
+        setEditEntry(entry);
+        setDayOfWeek(entry.dayOfWeek);
+        setStartTime(entry.startTime ? entry.startTime.slice(0,5) : '');
+        setEndTime(entry.endTime ? entry.endTime.slice(0,5) : '');
+        setShowModal(true);
     };
 
     return (
@@ -45,20 +62,40 @@ const DoctorScheduleTable: React.FC<Props> = ({ data, onAddHoliday }) => {
                         <th className="px-6 py-3">Day</th>
                         <th className="px-6 py-3">Start Time</th>
                         <th className="px-6 py-3">End Time</th>
+                        <th className="px-6 py-3">Actions</th>
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
                     {data.map((entry) => (
-                        <tr key={entry.dayOfWeek} className="hover:bg-tableHover">
+                        <tr key={entry.id ?? entry.dayOfWeek} className="hover:bg-tableHover">
                             <td className="px-6 py-4 font-medium">{entry.dayOfWeek}</td>
                             {entry.isHoliday ? (
-                                <td className="px-6 py-4 text-gray-400 italic" colSpan={2}>
-                                    Holiday
-                                </td>
+                                <>
+                                    <td className="px-6 py-4 text-gray-400 italic" colSpan={2}>
+                                        Holiday
+                                    </td>
+                                    <td className="px-6 py-4"></td>
+                                </>
                             ) : (
                                 <>
                                     <td className="px-6 py-4">{formatTime(entry.startTime)}</td>
                                     <td className="px-6 py-4">{formatTime(entry.endTime)}</td>
+                                    <td className="px-6 py-4 space-x-2">
+                                        <button
+                                            onClick={() => openEdit(entry)}
+                                            className="text-blue-600 hover:underline"
+                                        >
+                                            {t('edit')}
+                                        </button>
+                                        {entry.id !== undefined && (
+                                            <button
+                                                onClick={() => onDelete(entry.id!)}
+                                                className="text-red-600 hover:underline"
+                                            >
+                                                {t('delete')}
+                                            </button>
+                                        )}
+                                    </td>
                                 </>
                             )}
                         </tr>
@@ -84,7 +121,9 @@ const DoctorScheduleTable: React.FC<Props> = ({ data, onAddHoliday }) => {
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30">
                     <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-                        <h2 className="text-lg font-semibold mb-4">{t("addSchedule")}</h2>
+                        <h2 className="text-lg font-semibold mb-4">
+                            {editEntry ? t('editSchedule') : t('addSchedule')}
+                        </h2>
 
                         <div className="mb-4">
                             <label className="block text-sm font-medium mb-1">{t('day')}</label>
@@ -135,7 +174,7 @@ const DoctorScheduleTable: React.FC<Props> = ({ data, onAddHoliday }) => {
                                 onClick={handleSubmit}
                                 className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                             >
-                                {t("add")}
+                                {editEntry ? t('update') : t('add')}
                             </button>
                         </div>
                     </div>

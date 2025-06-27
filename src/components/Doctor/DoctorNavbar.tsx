@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useTranslation } from 'react-i18next';
 import {LOGO_URL} from '../../constants/appConfig';
-import { COLORS } from '../../constants/theme';
 import { useAuth } from '../../contexts/ContextsAuth';
 import {profileIcon} from "../../constants/assets";
 import {useNavigate} from "react-router-dom";
@@ -21,16 +20,21 @@ const DoctorNavbar: React.FC<Props> = () => {
         i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en');
     };
 
+    const [isDark, setIsDark] = useState(false);
+
     const toggleTheme = () => {
-        console.log("Ok")
         const root = document.documentElement;
-        const isDark = root.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        const newTheme = !isDark;
+        setIsDark(newTheme);
+        root.classList.toggle('dark', newTheme);
+        localStorage.setItem('theme', newTheme ? 'dark' : 'light');
     };
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
+        const dark = savedTheme === 'dark';
+        setIsDark(dark);
+        if (dark) {
             document.documentElement.classList.add('dark');
         }
     }, []);
@@ -43,10 +47,9 @@ const DoctorNavbar: React.FC<Props> = () => {
 
     return (
         <nav
-            className="fixed top-0 w-full z-50 shadow-md"
-            style={{ backgroundColor: COLORS.primary }}
+            className="fixed top-0 w-full z-50 shadow-md bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100"
         >
-            <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between text-white">
+            <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
                 {/* Left: Logo + Language Switch */}
                 <div className="flex items-center gap-4">
                     <img src={LOGO_URL} alt="Logo" className="h-10 w-10 rounded-full" />
@@ -75,19 +78,35 @@ const DoctorNavbar: React.FC<Props> = () => {
                         className="hover:text-yellow-300 transition"
                         title="Toggle theme"
                     >
-                        <svg
-                            className="w-6 h-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 3v1m0 16v1m8.66-11.66l-.7.7M4.34 4.34l.7.7M21 12h-1M4 12H3m15.66 4.34l-.7-.7M4.34 19.66l.7-.7M12 7a5 5 0 000 10a5 5 0 000-10z"
-                            />
-                        </svg>
+                        {isDark ? (
+                            <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 3v1m0 16v1m8.66-11.66l-.7.7M4.34 4.34l.7.7M21 12h-1M4 12H3m15.66 4.34l-.7-.7M4.34 19.66l.7-.7M12 7a5 5 0 000 10a5 5 0 000-10z"
+                                />
+                            </svg>
+                        ) : (
+                            <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+                                />
+                            </svg>
+                        )}
                     </button>
 
                     {/* Profile Dropdown */}
@@ -100,7 +119,7 @@ const DoctorNavbar: React.FC<Props> = () => {
                             />
                             <span className="text-sm font-medium">{user?.username || 'Doctor'}</span>
                             <svg
-                                className="w-4 h-4 text-white"
+                                className="w-4 h-4"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
