@@ -113,7 +113,26 @@
   "notes": "Notes",
   "on_hold": "On Hold",
   "address": "Address",
-  "noPatients": "No patients found."
+  "noPatients": "No patients found.",
+  "requested": "Requested",
+  "confirmed": "Confirmed",
+  "checkedIn": "Checked In",
+  "inProgress": "In Progress",
+  "completed": "Completed",
+  "noShow": "No Show",
+  "cancelledByPatient": "Cancelled by Patient",
+  "cancelledByClinic": "Cancelled by Clinic",
+  "rescheduled": "Rescheduled",
+  "paymentPending": "Payment Pending",
+  "onHold": "On Hold",
+  "virtual": "Virtual",
+  "inPerson": "In-Person",
+  "AddHoliday": "Add Holiday",
+  "AddSchedule": "Add Workday",
+  "day": "Day",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "add": "Add"
 
 
 

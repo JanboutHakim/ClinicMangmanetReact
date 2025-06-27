@@ -7,6 +7,12 @@ import { useAuth } from '../../contexts/ContextsAuth';
 import AppointmentTable, { Appointment } from '../../components/Doctor/DoctorAppointments';
 import AppointmentFilterBar from "../../components/Doctor/AppointmentFilterBar";
 import DoctorPatientTable, {Patient} from "../../components/Doctor/DoctorPatientTable";
+import {confirmAppointment, getAppointmentsByDoctor} from "../../services/appointmentService";
+import {API_ENDPOINTS} from "../../constants/apiConfig";
+import api from "../../services/api";
+import DoctorSidebar from "../../components/Doctor/DoctorSidebar";
+import DoctorScheduleTable, {ScheduleEntry} from "../../components/Doctor/DoctorScheduleTable";
+import {handleAddSchedules} from "../../services/doctorService";
 
 const DoctorDashboard: React.FC = () => {
     const { t } = useTranslation();
@@ -16,6 +22,7 @@ const DoctorDashboard: React.FC = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [todayAppointments,setTodayAppointments] = useState<Appointment[]>([]);
     const [patients,setPatients] = useState<Patient[]>([]);
+    const [schedules,setSchedules] = useState<ScheduleEntry[]>([]);
     const [statusFilter, setStatusFilter] = useState('');
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [cancelReason, setCancelReason] = useState('');
@@ -47,6 +54,35 @@ const DoctorDashboard: React.FC = () => {
             .then((res) => setPatients(res.data))
             .catch((err) => console.error('Today visits fetch error:', err));
     }, [user, accessToken]);
+
+    useEffect(() => {
+        if (!user) return;
+        api
+            .get(API_ENDPOINTS.doctorSchedules(user.id), {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            })
+            .then((res) => setSchedules(res.data))
+            .catch((err) => console.error('Schedule fetch error:', err));
+    }, [user, accessToken]);
+
+    const handleAddSchedule = async (newSchedule: ScheduleEntry) => {
+        if (!user || !accessToken) return;
+
+        const formattedSchedule: ScheduleEntry = {
+            ...newSchedule,
+            startTime: newSchedule.startTime ? `${newSchedule.startTime}:00` : undefined,
+            endTime: newSchedule.endTime ? `${newSchedule.endTime}:00` : undefined,
+        };
+
+        try {
+            await handleAddSchedules(user.id, formattedSchedule, accessToken);
+            setSchedules((prev) => [...prev, formattedSchedule]);
+        } catch (err) {
+            console.error("❌ Failed to add schedule:", err);
+        }
+    };
+
+
 
 
     const handleConformation = async (appointmentId: number) => {
@@ -139,6 +175,11 @@ const DoctorDashboard: React.FC = () => {
                                           onCancel={handleCancelClick} />
                     </>
                 );
+            case 'schedules'  :
+                return (<>
+                    <h1 className="text-2xl font-bold mb-4">{t('schedules')}</h1>
+                    <DoctorScheduleTable data={schedules} onAddHoliday={handleAddSchedule}/>
+                </>);
             default:
                 return <h1 className="text-2xl font-bold">{t('overview')}</h1>;
         }

@@ -1,5 +1,6 @@
 import api from './api';
 import { API_ENDPOINTS } from '../constants/apiConfig';
+import {ScheduleEntry} from "../components/Doctor/DoctorScheduleTable";
 
 export const getDoctors = async (search?: string, specialty?: string, token?: string) => {
   const params = new URLSearchParams();
@@ -23,4 +24,18 @@ export const getDoctorAppointments = async (id: number | string, token: string) 
 export const getAvailableSlots = async (id: number | string, token?: string) => {
   const res = await api.get(API_ENDPOINTS.availableSlots(id), token ? { headers: { Authorization: `Bearer ${token}` } } : undefined);
   return res.data;
+};
+
+export const getDoctorSchedules = async (id: number | string, token?: string) => {
+  const res= await api.get(API_ENDPOINTS.doctorSchedules(id), { headers: { Authorization: `Bearer ${token}` } } );
+};
+
+export const handleAddSchedules = async (
+    id: number | string,
+    schedule: ScheduleEntry,
+    token?: string
+) => {
+  await api.post(API_ENDPOINTS.doctorSchedules(id), schedule, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
 };

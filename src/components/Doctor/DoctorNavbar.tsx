@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useTranslation } from 'react-i18next';
 import {LOGO_URL} from '../../constants/appConfig';
 import { COLORS } from '../../constants/theme';
 import { useAuth } from '../../contexts/ContextsAuth';
 import {profileIcon} from "../../constants/assets";
+import {useNavigate} from "react-router-dom";
 
 interface Props {
     onSelect: (section: string) => void;
@@ -12,14 +13,32 @@ interface Props {
 
 const DoctorNavbar: React.FC<Props> = () => {
     const { t, i18n } = useTranslation();
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
 
     const toggleLang = () => {
         i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en');
     };
 
     const toggleTheme = () => {
-        document.documentElement.classList.toggle('dark');
+        console.log("Ok")
+        const root = document.documentElement;
+        const isDark = root.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    };
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    }, []);
+
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
     };
 
     return (
@@ -99,7 +118,7 @@ const DoctorNavbar: React.FC<Props> = () => {
                             <a href="#" className="block px-4 py-2 hover:bg-gray-100">
                                 👤 {t('profile') || 'Profile'}
                             </a>
-                            <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                            <a href="#" onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-100">
                                 🚪 {t('logout') || 'Logout'}
                             </a>
                         </div>
