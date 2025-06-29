@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
 
 export interface Patient {
     id: number;
@@ -14,6 +15,7 @@ interface Props {
 
 const DoctorPatientTable: React.FC<Props> = ({ data }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     if (data.length === 0) {
         return (
@@ -36,7 +38,7 @@ const DoctorPatientTable: React.FC<Props> = ({ data }) => {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                 {data.map((patient, index) => (
-                    <tr key={patient.id} className="hover:bg-gray-50">
+                    <tr key={patient.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => navigate(`/doctor-home/patient/${patient.id}`)}>
                         <td className="px-6 py-4 font-medium">{index + 1}</td>
                         <td className="px-6 py-4">{patient.name}</td>
                         <td className="px-6 py-4">{patient.phoneNumber}</td>
