@@ -8,6 +8,7 @@ import DoctorsPage from './pages/DoctorsPage';
 import AppointmentBookingPage from './pages/PatientPage/AppointmentBookingPage';
 import BookingPage from './pages/PatientPage/BookingPage';
 import AppointmentsPage from './pages/AppointmentsPage';
+import DoctorPatientPage from "./pages/DoctorPage/DoctorPatientPage";
 import ProfilePage from './pages/PatientPage/ProfilePage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DrugPage from "./pages/DrugPage";
@@ -45,6 +46,7 @@ const App: React.FC = () => {
             <Route path="/verify-otp" element={<VerifyOtpPage />} />
             <Route path="/my-drug" element={<MyDrugPage />}/>
             <Route path="/doctor-home" element={<DoctorHomePage/>}/>
+            <Route path="/doctor-home/patient/:id" element={<DoctorPatientPage />} />
         </Routes>
     </Router>
     );
