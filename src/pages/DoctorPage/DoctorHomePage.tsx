@@ -13,6 +13,7 @@ import {API_ENDPOINTS} from "../../constants/apiConfig";
 import api from "../../services/api";
 import DoctorSidebar from "../../components/Doctor/DoctorSidebar";
 import DoctorScheduleTable, {ScheduleEntry} from "../../components/Doctor/DoctorScheduleTable";
+import ScheduleModal from "../../components/Doctor/ScheduleModal";
 import {handleAddSchedules, updateSchedule, deleteSchedule} from "../../services/doctorService";
 import DoctorHolidayTable from "../../components/Doctor/DoctorHoliday table";
 
@@ -31,7 +32,8 @@ const DoctorDashboard: React.FC = () => {
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [cancelReason, setCancelReason] = useState('');
     const [selectedApptId, setSelectedApptId] = useState<number | null>(null);
-    const [showModal, setShowModal] = useState(false);
+    const [showScheduleModal, setShowScheduleModal] = useState(false);
+    const [editEntry, setEditEntry] = useState<ScheduleEntry | null>(null);
 
 
     useEffect(() => {
@@ -112,6 +114,24 @@ const DoctorDashboard: React.FC = () => {
             setSchedules((prev) => prev.filter((s) => s.id !== scheduleId));
         } catch (err) {
             console.error('❌ Failed to delete schedule:', err);
+        }
+    };
+
+    const openAddSchedule = (holiday = false) => {
+        setEditEntry(holiday ? { dayOfWeek: '', isHoliday: true } as ScheduleEntry : null);
+        setShowScheduleModal(true);
+    };
+
+    const openEditSchedule = (entry: ScheduleEntry) => {
+        setEditEntry(entry);
+        setShowScheduleModal(true);
+    };
+
+    const handleScheduleSubmit = (entry: ScheduleEntry) => {
+        if (editEntry && editEntry.id) {
+            handleUpdateSchedule({ ...entry, id: editEntry.id });
+        } else {
+            handleAddSchedule({ ...entry, isHoliday: editEntry?.isHoliday });
         }
     };
 
@@ -231,8 +251,7 @@ const DoctorDashboard: React.FC = () => {
                     <h1 className="text-2xl font-bold mb-4">{t('schedules')}</h1>
                     <DoctorScheduleTable
                         data={schedules}
-                        onAddHoliday={handleAddSchedule}
-                        onUpdate={handleUpdateSchedule}
+                        onEdit={openEditSchedule}
                         onDelete={handleDeleteSchedule}
                     />
                     <h1 className="text-2xl font-bold mb-4 pt-6">{t('holidays')}</h1>
@@ -245,77 +264,23 @@ const DoctorDashboard: React.FC = () => {
                     {/* Buttons */}
                     <div className="flex justify-end gap-4">
                         <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow text-sm"
-                                onClick={() => setShowModal(true)}
+                                onClick={openAddSchedule}
                         >
                             {t("AddSchedule")}
                         </button>
                         <button
-                            className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded shadow text-sm">
+                            className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded shadow text-sm"
+                            onClick={() => openAddSchedule(true)}
+                        >
                             {t("AddHoliday")}
                         </button>
                     </div>
-                    {/* Modal */}
-                    {showModal && (
-                        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30">
-                            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-                                <h2 className="text-lg font-semibold mb-4">
-                                    {editEntry ? t('editSchedule') : t('addSchedule')}
-                                </h2>
-
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium mb-1">{t('day')}</label>
-                                    <select
-                                        value={dayOfWeek}
-                                        onChange={(e) => setDayOfWeek(e.target.value)}
-                                        className="w-full border px-3 py-2 rounded"
-                                    >
-                                        <option value="">{t("select")}</option>
-                                        {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(
-                                            (day) => (
-                                                <option key={day} value={day.toUpperCase()}>
-                                                    {day}
-                                                </option>
-                                            )
-                                        )}
-                                    </select>
-                                </div>
-
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium mb-1">{t("startTime")}</label>
-                                    <input
-                                        type="time"
-                                        value={startTime}
-                                        onChange={(e) => setStartTime(e.target.value)}
-                                        className="w-full border px-3 py-2 rounded"
-                                    />
-                                </div>
-
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium mb-1">{t("endTime")}</label>
-                                    <input
-                                        type="time"
-                                        value={endTime}
-                                        onChange={(e) => setEndTime(e.target.value)}
-                                        className="w-full border px-3 py-2 rounded"
-                                    />
-                                </div>
-
-                                <div className="flex justify-end gap-2">
-                                    <button
-                                        onClick={() => setShowModal(false)}
-                                        className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                                    >
-                                        {t("cancel")}
-                                    </button>
-                                    <button
-                                        onClick={handleSubmit}
-                                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                                    >
-                                        {editEntry ? t('update') : t('add')}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    {showScheduleModal && (
+                        <ScheduleModal
+                            initialEntry={editEntry ?? undefined}
+                            onSubmit={handleScheduleSubmit}
+                            onClose={() => setShowScheduleModal(false)}
+                        />
                     )}
                 </>);
             default:
