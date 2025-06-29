@@ -9,14 +9,14 @@ import DoctorSidebar from '../../components/Doctor/DoctorSidebar';
 
 const DoctorPatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { accessToken } = useAuth();
+  const { user,accessToken } = useAuth();
   const [patient, setPatient] = useState<PatientInfo | null>(null);
   const [drugs, setDrugs] = useState<any[]>([]);
   const [section, setSection] = useState('patients');
 
   useEffect(() => {
-    if (!id || !accessToken) return;
-    getPatientById(id, accessToken)
+    if (!id || !accessToken ||!user) return;
+    getPatientById(user.id,id, accessToken)
       .then(setPatient)
       .catch((err) => console.error('Failed to load patient', err));
     getPatientDrugs(id, accessToken)

@@ -15,14 +15,14 @@ interface LocationState { appointment: AppointmentInfo; }
 const DoctorAppointmentPage: React.FC = () => {
   const { state } = useLocation() as { state?: LocationState };
   const appointment = state?.appointment;
-  const { accessToken } = useAuth();
+  const { user,accessToken } = useAuth();
   const [patient, setPatient] = useState<PatientInfo | null>(null);
   const [drugs, setDrugs] = useState<DrugInfo[]>([]);
   const [section, setSection] = useState('appointments');
 
   useEffect(() => {
-    if (!appointment || !accessToken) return;
-    getPatientById(appointment.patientId, accessToken)
+    if (!appointment || !accessToken || !user) return;
+    getPatientById(user.id,appointment.patientId, accessToken)
       .then(setPatient)
       .catch((err) => console.error('Patient fetch error', err));
     getPatientDrugs(appointment.patientId, accessToken)
