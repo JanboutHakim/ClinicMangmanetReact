@@ -14,8 +14,15 @@ import api from "../../services/api";
 import DoctorSidebar from "../../components/Doctor/DoctorSidebar";
 import DoctorScheduleTable, {ScheduleEntry} from "../../components/Doctor/DoctorScheduleTable";
 import ScheduleModal from "../../components/Doctor/ScheduleModal";
-import {handleAddSchedules, updateSchedule, deleteSchedule} from "../../services/doctorService";
-import DoctorHolidayTable, {HolidayEntry} from "../../components/Doctor/DoctorHoliday table";
+import {
+    handleAddSchedules,
+    updateSchedule,
+    deleteSchedule,
+    handleAddHoliday as addHolidayApi,
+    updateHoliday,
+    deleteHoliday,
+} from "../../services/doctorService";
+import DoctorHolidayTable, {HolidayEntry} from "../../components/Doctor/DoctorHolidayTable";
 
 const DoctorDashboard: React.FC = () => {
     const { t } = useTranslation();
@@ -78,8 +85,8 @@ const DoctorDashboard: React.FC = () => {
             .get(API_ENDPOINTS.holidaySchedule(user.id), {
                 headers: { Authorization: `Bearer ${accessToken}` },
             })
-            .then((res) => setSchedules(res.data))
-            .catch((err) => console.error('Schedule fetch error:', err));
+            .then((res) => setHoliday(res.data))
+            .catch((err) => console.error('Holiday fetch error:', err));
     }, [user, accessToken]);
 
     const handleAddSchedule = async (newSchedule: ScheduleEntry) => {
@@ -123,6 +130,36 @@ const DoctorDashboard: React.FC = () => {
             setSchedules((prev) => prev.filter((s) => s.id !== scheduleId));
         } catch (err) {
             console.error('❌ Failed to delete schedule:', err);
+        }
+    };
+
+    const handleAddHoliday = async (entry: HolidayEntry) => {
+        if (!user || !accessToken) return;
+        try {
+            await addHolidayApi(user.id, entry, accessToken);
+            setHoliday((prev) => [...prev, entry]);
+        } catch (err) {
+            console.error('❌ Failed to add holiday:', err);
+        }
+    };
+
+    const handleUpdateHoliday = async (entry: HolidayEntry) => {
+        if (!user || !accessToken || !entry.id) return;
+        try {
+            await updateHoliday(user.id, entry.id, entry, accessToken);
+            setHoliday((prev) => prev.map((h) => (h.id === entry.id ? { ...h, ...entry } : h)));
+        } catch (err) {
+            console.error('❌ Failed to update holiday:', err);
+        }
+    };
+
+    const handleDeleteHoliday = async (holidayId: number) => {
+        if (!user || !accessToken) return;
+        try {
+            await deleteHoliday(user.id, holidayId, accessToken);
+            setHoliday((prev) => prev.filter((h) => h.id !== holidayId));
+        } catch (err) {
+            console.error('❌ Failed to delete holiday:', err);
         }
     };
 
@@ -266,9 +303,9 @@ const DoctorDashboard: React.FC = () => {
                     <h1 className="text-2xl font-bold mb-4 pt-6">{t('holidays')}</h1>
                     <DoctorHolidayTable
                         data={holiday}
-                        onAddHoliday={handleAddSchedule}
-                        onUpdate={handleUpdateSchedule}
-                        onDelete={handleDeleteSchedule}
+                        onAddHoliday={handleAddHoliday}
+                        onUpdate={handleUpdateHoliday}
+                        onDelete={handleDeleteHoliday}
                     />
                     <div className="p-12"></div>
                     {/* Buttons */}
@@ -277,12 +314,6 @@ const DoctorDashboard: React.FC = () => {
                                 onClick={openAddSchedule}
                         >
                             {t("AddSchedule")}
-                        </button>
-                        <button
-                            className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded shadow text-sm"
-                            onClick={() => openAddSchedule(true)}
-                        >
-                            {t("AddHoliday")}
                         </button>
                     </div>
                     {showScheduleModal && (

@@ -1,7 +1,7 @@
 import api from './api';
 import { API_ENDPOINTS } from '../constants/apiConfig';
 import {ScheduleEntry} from "../components/Doctor/DoctorScheduleTable";
-import {HolidayEntry} from "../components/Doctor/DoctorHoliday table";
+import {HolidayEntry} from "../components/Doctor/DoctorHolidayTable";
 
 export const getDoctors = async (search?: string, specialty?: string, token?: string) => {
   const params = new URLSearchParams();

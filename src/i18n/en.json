@@ -129,6 +129,8 @@
   "inPerson": "In-Person",
   "AddHoliday": "Add Holiday",
   "AddSchedule": "Add Workday",
+  "schedules": "Schedules",
+  "holidays": "Holidays",
   "day": "Day",
   "startTime": "Start Time",
   "endTime": "End Time",

@@ -127,6 +127,8 @@
   "inPerson": "حضوري",
   "AddHoliday": "اضف يوم عطلة",
   "AddSchedule": "اضف يوم عمل",
+  "schedules": "جداول العمل",
+  "holidays": "الاجازات",
   "day": "يوم",
   "startTime": "وقت بداية الدوام",
   "endTime": "وقت نهاية الدوام",
