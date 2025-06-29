@@ -28,6 +28,7 @@ export interface PatientInfo {
   gender: string;
   appointments: AppointmentInfo[];
   imageUrl: string | null;
+  drugs?: DrugInfo[];
 }
 
 export interface DrugInfo {
@@ -42,10 +43,12 @@ interface Props {
   drugs?: DrugInfo[];
 }
 
-const PatientProfilePage: React.FC<Props> = ({ patient, drugs = [] }) => {
+const PatientProfilePage: React.FC<Props> = ({ patient, drugs }) => {
   if (!patient) {
     return <main className="p-6">Loading...</main>;
   }
+
+  const drugList = drugs ?? patient.drugs ?? [];
 
   return (
     <main className="flex-1 p-6 bg-gray-50 overflow-y-auto">
@@ -130,11 +133,11 @@ const PatientProfilePage: React.FC<Props> = ({ patient, drugs = [] }) => {
           <FileListCard header="Files" files={[]} actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add File</button>} />
           <FileListCard header="Notes" files={[]} actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add Note</button>} />
           <SectionCard title="Drugs" actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add Drug</button>}>
-            {drugs.length === 0 ? (
+            {drugList.length === 0 ? (
               <p className="text-sm text-gray-500">No medications found.</p>
             ) : (
               <ul className="text-sm space-y-1">
-                {drugs.map((d) => (
+                {drugList.map((d) => (
                   <li key={d.id} className="flex justify-between">
                     <span>{d.drugName}</span>
                     <span className="text-gray-500">{d.frequency}/day</span>

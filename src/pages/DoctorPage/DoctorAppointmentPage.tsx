@@ -7,7 +7,6 @@ import { PatientHeader } from '../../components/Doctor/PatientHeader';
 import { SectionCard } from '../../components/Doctor/SectionCard';
 import { useAuth } from '../../contexts/ContextsAuth';
 import { getPatientById } from '../../services/patientService';
-import { getPatientDrugs } from '../../services/drugService';
 import { PatientInfo, DrugInfo, AppointmentInfo } from '../../components/Doctor/PatientProfilePage';
 
 interface LocationState { appointment: AppointmentInfo; }
@@ -17,17 +16,15 @@ const DoctorAppointmentPage: React.FC = () => {
   const appointment = state?.appointment;
   const { user,accessToken } = useAuth();
   const [patient, setPatient] = useState<PatientInfo | null>(null);
-  const [drugs, setDrugs] = useState<DrugInfo[]>([]);
   const [section, setSection] = useState('appointments');
 
   useEffect(() => {
     if (!appointment || !accessToken || !user) return;
-    getPatientById(user.id,appointment.patientId, accessToken)
-      .then(setPatient)
+    getPatientById(user.id, appointment.patientId, accessToken)
+      .then((data) => {
+        setPatient(data);
+      })
       .catch((err) => console.error('Patient fetch error', err));
-    getPatientDrugs(appointment.patientId, accessToken)
-      .then(setDrugs)
-      .catch((err) => console.error('Drug fetch error', err));
   }, [appointment, accessToken]);
 
   return (
@@ -52,17 +49,17 @@ const DoctorAppointmentPage: React.FC = () => {
             <p>Loading...</p>
           )}
           <SectionCard title="Drugs">
-            {drugs.length === 0 ? (
-              <p className="text-sm text-gray-500">No medications found.</p>
-            ) : (
+            {patient?.drugs && patient.drugs.length > 0 ? (
               <ul className="text-sm space-y-1">
-                {drugs.map((d) => (
+                {patient.drugs.map((d) => (
                   <li key={d.id} className="flex justify-between">
                     <span>{d.drugName}</span>
                     <span className="text-gray-500">{d.frequency}/day</span>
                   </li>
                 ))}
               </ul>
+            ) : (
+              <p className="text-sm text-gray-500">No medications found.</p>
             )}
           </SectionCard>
         </main>
