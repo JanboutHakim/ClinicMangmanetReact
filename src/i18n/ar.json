@@ -134,5 +134,8 @@
   "edit": "تعديل",
   "delete": "حذف",
   "update": "تحديث",
+  "checkIn": "تسجيل الحضور",
+  "addAppointment": "اضافة موعد",
+  "appointmentPage": "صفحة الموعد",
   "editSchedule": "تعديل الجدول"
 }

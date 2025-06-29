@@ -135,6 +135,9 @@
   "add": "Add",
   "edit": "Edit",
   "delete": "Delete",
+  "checkIn": "Check In",
+  "addAppointment": "Add Appointment",
+  "appointmentPage": "Appointment Page",
   "update": "Update",
   "editSchedule": "Edit Schedule"
 

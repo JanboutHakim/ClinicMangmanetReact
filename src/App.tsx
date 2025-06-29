@@ -9,6 +9,7 @@ import AppointmentBookingPage from './pages/PatientPage/AppointmentBookingPage';
 import BookingPage from './pages/PatientPage/BookingPage';
 import AppointmentsPage from './pages/AppointmentsPage';
 import DoctorPatientPage from "./pages/DoctorPage/DoctorPatientPage";
+import DoctorAppointmentPage from "./pages/DoctorPage/DoctorAppointmentPage";
 import ProfilePage from './pages/PatientPage/ProfilePage';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DrugPage from "./pages/DrugPage";
@@ -47,6 +48,7 @@ const App: React.FC = () => {
             <Route path="/my-drug" element={<MyDrugPage />}/>
             <Route path="/doctor-home" element={<DoctorHomePage/>}/>
             <Route path="/doctor-home/patient/:id" element={<DoctorPatientPage />} />
+            <Route path="/doctor-home/appointment/:id" element={<DoctorAppointmentPage />} />
         </Routes>
     </Router>
     );

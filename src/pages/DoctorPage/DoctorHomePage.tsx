@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import DoctorNavbar from '../../components/Doctor/DoctorNavbar';
 
@@ -16,6 +17,7 @@ import {handleAddSchedules, updateSchedule, deleteSchedule} from "../../services
 
 const DoctorDashboard: React.FC = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [section, setSection] = useState('appointments');
     const { user, accessToken,refreshToken } = useAuth();
     console.log(refreshToken)
@@ -149,6 +151,18 @@ const DoctorDashboard: React.FC = () => {
             console.error('❌ Cancel failed:', error);
         }
     };
+
+    const handleCheckIn = (appointmentId: number) => {
+        setAppointments((prev) =>
+            prev.map((a) => (a.id === appointmentId ? { ...a, status: 'CHECKED_IN' } : a))
+        );
+    };
+
+    const handleNoShow = (appointmentId: number) => {
+        setAppointments((prev) =>
+            prev.map((a) => (a.id === appointmentId ? { ...a, status: 'NO_SHOW' } : a))
+        );
+    };
     const handleFilterChange = async (filters: {
         q: string;
         statuses: string[];
@@ -183,7 +197,11 @@ const DoctorDashboard: React.FC = () => {
                         <AppointmentFilterBar  onFilterChange={handleFilterChange} />
                         <AppointmentTable data={appointments}
                                           onConfirm={handleConformation}
-                                          onCancel={handleCancelClick} />
+                                          onCancel={handleCancelClick}
+                                          onCheckIn={handleCheckIn}
+                                          onNoShow={handleNoShow}
+                                          onRowClick={(a) => navigate(`/doctor-home/appointment/${a.id}`, { state: { appointment: a } })}
+                        />
                     </>
                 );
             case 'patients':
@@ -199,7 +217,11 @@ const DoctorDashboard: React.FC = () => {
                         <AppointmentFilterBar  onFilterChange={handleFilterChange} />
                         <AppointmentTable data={todayAppointments}
                                           onConfirm={handleConformation}
-                                          onCancel={handleCancelClick} />
+                                          onCancel={handleCancelClick}
+                                          onCheckIn={handleCheckIn}
+                                          onNoShow={handleNoShow}
+                                          onRowClick={(a) => navigate(`/doctor-home/appointment/${a.id}`, { state: { appointment: a } })}
+                        />
                     </>
                 );
             case 'schedules'  :
