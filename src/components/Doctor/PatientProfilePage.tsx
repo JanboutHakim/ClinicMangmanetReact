@@ -130,22 +130,22 @@ const PatientProfilePage: React.FC<Props> = ({ patient, drugs }) => {
               </p>
             </div>
           </SectionCard>
-          <FileListCard header="Files" files={[]} actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add File</button>} />
-          <FileListCard header="Notes" files={[]} actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add Note</button>} />
           <SectionCard title="Drugs" actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add Drug</button>}>
             {drugList.length === 0 ? (
-              <p className="text-sm text-gray-500">No medications found.</p>
+                <p className="text-sm text-gray-500">No medications found.</p>
             ) : (
-              <ul className="text-sm space-y-1">
-                {drugList.map((d) => (
-                  <li key={d.id} className="flex justify-between">
-                    <span>{d.drugName}</span>
-                    <span className="text-gray-500">{d.frequency}/day</span>
-                  </li>
-                ))}
-              </ul>
+                <ul className="text-sm space-y-1">
+                  {drugList.map((d) => (
+                      <li key={d.id} className="flex justify-between">
+                        <span>{d.drugName}</span>
+                        <span className="text-gray-500">{d.frequency}/day</span>
+                      </li>
+                  ))}
+                </ul>
             )}
           </SectionCard>
+          <FileListCard header="Files" files={[]} actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add File</button>} />
+
         </div>
       </div>
     </main>

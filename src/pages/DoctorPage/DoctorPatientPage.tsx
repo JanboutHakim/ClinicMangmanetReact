@@ -27,7 +27,6 @@ const DoctorPatientPage: React.FC = () => {
         <DoctorNavbar selected={section} onSelect={setSection} />
       </div>
       <div className="flex flex-1">
-        <DoctorSidebar selected={section} onSelect={setSection} />
         <PatientProfilePage patient={patient} />
       </div>
     </div>

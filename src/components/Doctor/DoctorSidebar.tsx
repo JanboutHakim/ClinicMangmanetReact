@@ -53,7 +53,7 @@ const DoctorSidebar: React.FC<Props> = ({ selected, onSelect }) => {
                                     selected === key
                                         ? 'text-white'
                                         : 'hover:text-white'
-                                }`}
+                                }hover:bg-blue-50`}
                                 style={{
                                     backgroundColor: selected === key ? COLORS.accent : 'transparent'
                                 }}

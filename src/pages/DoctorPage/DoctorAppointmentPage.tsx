@@ -33,7 +33,6 @@ const DoctorAppointmentPage: React.FC = () => {
         <DoctorNavbar selected={section} onSelect={setSection} />
       </div>
       <div className="flex flex-1">
-        <DoctorSidebar selected={section} onSelect={setSection} />
         <main className="flex-1 p-6 bg-gray-50">
           <PatientHeader title="Appointment Page" onAddAppointment={() => {}} />
           {appointment && patient ? (

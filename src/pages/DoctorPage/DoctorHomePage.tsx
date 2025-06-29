@@ -14,6 +14,7 @@ import api from "../../services/api";
 import DoctorSidebar from "../../components/Doctor/DoctorSidebar";
 import DoctorScheduleTable, {ScheduleEntry} from "../../components/Doctor/DoctorScheduleTable";
 import {handleAddSchedules, updateSchedule, deleteSchedule} from "../../services/doctorService";
+import DoctorHolidayTable from "../../components/Doctor/DoctorHoliday table";
 
 const DoctorDashboard: React.FC = () => {
     const { t } = useTranslation();
@@ -25,10 +26,13 @@ const DoctorDashboard: React.FC = () => {
     const [todayAppointments,setTodayAppointments] = useState<Appointment[]>([]);
     const [patients,setPatients] = useState<Patient[]>([]);
     const [schedules,setSchedules] = useState<ScheduleEntry[]>([]);
+    const [holiday,setHoliday] = useState<ScheduleEntry[]>([]);
     const [statusFilter, setStatusFilter] = useState('');
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [cancelReason, setCancelReason] = useState('');
     const [selectedApptId, setSelectedApptId] = useState<number | null>(null);
+    const [showModal, setShowModal] = useState(false);
+
 
     useEffect(() => {
         if (!user) return;
@@ -111,9 +115,6 @@ const DoctorDashboard: React.FC = () => {
         }
     };
 
-
-
-
     const handleConformation = async (appointmentId: number) => {
         if (!user || !accessToken) return;
         try {
@@ -163,6 +164,7 @@ const DoctorDashboard: React.FC = () => {
             prev.map((a) => (a.id === appointmentId ? { ...a, status: 'NO_SHOW' } : a))
         );
     };
+
     const handleFilterChange = async (filters: {
         q: string;
         statuses: string[];
@@ -233,6 +235,88 @@ const DoctorDashboard: React.FC = () => {
                         onUpdate={handleUpdateSchedule}
                         onDelete={handleDeleteSchedule}
                     />
+                    <h1 className="text-2xl font-bold mb-4 pt-6">{t('holidays')}</h1>
+                    <DoctorHolidayTable
+                        data={schedules}
+                        onAddHoliday={handleAddSchedule}
+                        onUpdate={handleUpdateSchedule}
+                        onDelete={handleDeleteSchedule}
+                    />
+                    {/* Buttons */}
+                    <div className="flex justify-end gap-4">
+                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow text-sm"
+                                onClick={() => setShowModal(true)}
+                        >
+                            {t("AddSchedule")}
+                        </button>
+                        <button
+                            className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded shadow text-sm">
+                            {t("AddHoliday")}
+                        </button>
+                    </div>
+                    {/* Modal */}
+                    {showModal && (
+                        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30">
+                            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+                                <h2 className="text-lg font-semibold mb-4">
+                                    {editEntry ? t('editSchedule') : t('addSchedule')}
+                                </h2>
+
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">{t('day')}</label>
+                                    <select
+                                        value={dayOfWeek}
+                                        onChange={(e) => setDayOfWeek(e.target.value)}
+                                        className="w-full border px-3 py-2 rounded"
+                                    >
+                                        <option value="">{t("select")}</option>
+                                        {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(
+                                            (day) => (
+                                                <option key={day} value={day.toUpperCase()}>
+                                                    {day}
+                                                </option>
+                                            )
+                                        )}
+                                    </select>
+                                </div>
+
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">{t("startTime")}</label>
+                                    <input
+                                        type="time"
+                                        value={startTime}
+                                        onChange={(e) => setStartTime(e.target.value)}
+                                        className="w-full border px-3 py-2 rounded"
+                                    />
+                                </div>
+
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">{t("endTime")}</label>
+                                    <input
+                                        type="time"
+                                        value={endTime}
+                                        onChange={(e) => setEndTime(e.target.value)}
+                                        className="w-full border px-3 py-2 rounded"
+                                    />
+                                </div>
+
+                                <div className="flex justify-end gap-2">
+                                    <button
+                                        onClick={() => setShowModal(false)}
+                                        className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                                    >
+                                        {t("cancel")}
+                                    </button>
+                                    <button
+                                        onClick={handleSubmit}
+                                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                                    >
+                                        {editEntry ? t('update') : t('add')}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </>);
             default:
                 return <h1 className="text-2xl font-bold">{t('overview')}</h1>;
