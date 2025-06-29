@@ -2,19 +2,17 @@ import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import {useTranslation} from "react-i18next";
 
-export interface ScheduleEntry {
+export interface HolidayEntry {
     id?: number;
-    dayOfWeek: string;
     startTime?: string;
     endTime?: string;
-    isHoliday?: boolean;
 }
 
 interface Props {
-    data: ScheduleEntry[];
-    onAddHoliday: (entry: ScheduleEntry) => void;
+    data: HolidayEntry[];
+    onAddHoliday: (entry: HolidayEntry) => void;
     onDelete: (id: number) => void;
-    onUpdate: (entry: ScheduleEntry) => void;
+    onUpdate: (entry: HolidayEntry) => void;
 }
 
 const formatTime = (time?: string) => {
@@ -22,7 +20,7 @@ const formatTime = (time?: string) => {
 };
 
 const DoctorScheduleTable: React.FC<Props> = ({ data, onAddHoliday, onDelete, onUpdate }) => {
-    const [editEntry, setEditEntry] = useState<ScheduleEntry | null>(null);
+    const [editEntry, setEditEntry] = useState<HolidayEntry | null>(null);
     const [dayOfWeek, setDayOfWeek] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
@@ -30,7 +28,7 @@ const DoctorScheduleTable: React.FC<Props> = ({ data, onAddHoliday, onDelete, on
 
     const handleSubmit = () => {
         if (!dayOfWeek) return;
-        const entry: ScheduleEntry = { id: editEntry?.id, dayOfWeek, startTime, endTime };
+        const entry: HolidayEntry = { id: editEntry?.id, startTime, endTime };
         if (editEntry) {
             onUpdate(entry);
         } else {
@@ -43,7 +41,7 @@ const DoctorScheduleTable: React.FC<Props> = ({ data, onAddHoliday, onDelete, on
         setEditEntry(null);
     };
 
-    const openEdit = (entry: ScheduleEntry) => {
+    const openEdit = (entry: HolidayEntry) => {
         setEditEntry(entry);
         setDayOfWeek(entry.dayOfWeek);
         setStartTime(entry.startTime ? entry.startTime.slice(0,5) : '');

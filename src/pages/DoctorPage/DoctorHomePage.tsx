@@ -15,7 +15,7 @@ import DoctorSidebar from "../../components/Doctor/DoctorSidebar";
 import DoctorScheduleTable, {ScheduleEntry} from "../../components/Doctor/DoctorScheduleTable";
 import ScheduleModal from "../../components/Doctor/ScheduleModal";
 import {handleAddSchedules, updateSchedule, deleteSchedule} from "../../services/doctorService";
-import DoctorHolidayTable from "../../components/Doctor/DoctorHoliday table";
+import DoctorHolidayTable, {HolidayEntry} from "../../components/Doctor/DoctorHoliday table";
 
 const DoctorDashboard: React.FC = () => {
     const { t } = useTranslation();
@@ -27,7 +27,7 @@ const DoctorDashboard: React.FC = () => {
     const [todayAppointments,setTodayAppointments] = useState<Appointment[]>([]);
     const [patients,setPatients] = useState<Patient[]>([]);
     const [schedules,setSchedules] = useState<ScheduleEntry[]>([]);
-    const [holiday,setHoliday] = useState<ScheduleEntry[]>([]);
+    const [holiday,setHoliday] = useState<HolidayEntry[]>([]);
     const [statusFilter, setStatusFilter] = useState('');
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [cancelReason, setCancelReason] = useState('');
@@ -67,6 +67,15 @@ const DoctorDashboard: React.FC = () => {
         if (!user) return;
         api
             .get(API_ENDPOINTS.doctorSchedules(user.id), {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            })
+            .then((res) => setSchedules(res.data))
+            .catch((err) => console.error('Schedule fetch error:', err));
+    }, [user, accessToken]);
+    useEffect(() => {
+        if (!user) return;
+        api
+            .get(API_ENDPOINTS.holidaySchedule(user.id), {
                 headers: { Authorization: `Bearer ${accessToken}` },
             })
             .then((res) => setSchedules(res.data))
@@ -256,11 +265,12 @@ const DoctorDashboard: React.FC = () => {
                     />
                     <h1 className="text-2xl font-bold mb-4 pt-6">{t('holidays')}</h1>
                     <DoctorHolidayTable
-                        data={schedules}
+                        data={holiday}
                         onAddHoliday={handleAddSchedule}
                         onUpdate={handleUpdateSchedule}
                         onDelete={handleDeleteSchedule}
                     />
+                    <div className="p-12"></div>
                     {/* Buttons */}
                     <div className="flex justify-end gap-4">
                         <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow text-sm"

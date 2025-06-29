@@ -1,6 +1,7 @@
 import api from './api';
 import { API_ENDPOINTS } from '../constants/apiConfig';
 import {ScheduleEntry} from "../components/Doctor/DoctorScheduleTable";
+import {HolidayEntry} from "../components/Doctor/DoctorHoliday table";
 
 export const getDoctors = async (search?: string, specialty?: string, token?: string) => {
   const params = new URLSearchParams();
@@ -57,6 +58,36 @@ export const deleteSchedule = async (
     token?: string
 ) => {
   await api.delete(`${API_ENDPOINTS.doctorSchedules(doctorId)}/${scheduleId}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+};
+export const handleAddHoliday = async (
+    id: number | string,
+    schedule: HolidayEntry,
+    token?: string
+) => {
+  await api.post(API_ENDPOINTS.holidaySchedule(id), schedule, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+};
+
+export const updateHoliday = async (
+    doctorId: number | string,
+    scheduleId: number | string,
+    schedule: HolidayEntry,
+    token?: string
+) => {
+  await api.put(`${API_ENDPOINTS.holidaySchedule(doctorId)}/${scheduleId}`, schedule, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+};
+
+export const deleteHoliday = async (
+    doctorId: number | string,
+    holidayId: number | string,
+    token?: string
+) => {
+  await api.delete(`${API_ENDPOINTS.holidaySchedule(doctorId)}/${holidayId}`, {
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
   });
 };
