@@ -77,9 +77,12 @@ interface Props {
     data: Appointment[];
     onConfirm?: (appointmentId: number) => void;
     onCancel?: (appointmentId: number) => void;
+    onCheckIn?: (appointmentId: number) => void;
+    onNoShow?: (appointmentId: number) => void;
+    onRowClick?: (appt: Appointment) => void;
 }
 
-const AppointmentTable: React.FC<Props> = ({ data, onConfirm, onCancel }) => {
+const AppointmentTable: React.FC<Props> = ({ data, onConfirm, onCancel, onCheckIn, onNoShow, onRowClick }) => {
     const { t } = useTranslation();
 
     if (data.length === 0) {
@@ -110,7 +113,7 @@ const AppointmentTable: React.FC<Props> = ({ data, onConfirm, onCancel }) => {
                     const time = dayjs(appt.startTime).format('h:mm A');
 
                     return (
-                        <tr key={appt.id} className="hover:bg-gray-50">
+                        <tr key={appt.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => onRowClick?.(appt)}>
                             <td className="px-6 py-4 font-medium">{index + 1}</td>
                             <td className="px-6 py-4">{appt.patientName || `#${appt.patientId}`}</td>
                             <td className="px-6 py-4">{appt.doctorName || `#${appt.doctorId}`}</td>
@@ -144,6 +147,22 @@ const AppointmentTable: React.FC<Props> = ({ data, onConfirm, onCancel }) => {
                                         className="text-red-600 hover:underline"
                                     >
                                         {t('cancel')}
+                                    </button>
+                                )}
+                                {onCheckIn && (
+                                    <button
+                                        onClick={() => onCheckIn(appt.id)}
+                                        className="text-indigo-600 hover:underline"
+                                    >
+                                        {t('checkIn')}
+                                    </button>
+                                )}
+                                {onNoShow && (
+                                    <button
+                                        onClick={() => onNoShow(appt.id)}
+                                        className="text-red-700 hover:underline"
+                                    >
+                                        {t('noShow')}
                                     </button>
                                 )}
                             </td>

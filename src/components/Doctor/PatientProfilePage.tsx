@@ -30,11 +30,19 @@ export interface PatientInfo {
   imageUrl: string | null;
 }
 
-interface Props {
-  patient: PatientInfo | null;
+export interface DrugInfo {
+  id: number;
+  drugName: string;
+  frequency: number;
+  dosage?: string | null;
 }
 
-const PatientProfilePage: React.FC<Props> = ({ patient }) => {
+interface Props {
+  patient: PatientInfo | null;
+  drugs?: DrugInfo[];
+}
+
+const PatientProfilePage: React.FC<Props> = ({ patient, drugs = [] }) => {
   if (!patient) {
     return <main className="p-6">Loading...</main>;
   }
@@ -119,8 +127,22 @@ const PatientProfilePage: React.FC<Props> = ({ patient }) => {
               </p>
             </div>
           </SectionCard>
-          <FileListCard header="Files" files={[]} />
-          <FileListCard header="Notes" files={[]} />
+          <FileListCard header="Files" files={[]} actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add File</button>} />
+          <FileListCard header="Notes" files={[]} actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add Note</button>} />
+          <SectionCard title="Drugs" actions={<button className="text-sm px-2 py-1 rounded bg-blue-600 text-white">+ Add Drug</button>}>
+            {drugs.length === 0 ? (
+              <p className="text-sm text-gray-500">No medications found.</p>
+            ) : (
+              <ul className="text-sm space-y-1">
+                {drugs.map((d) => (
+                  <li key={d.id} className="flex justify-between">
+                    <span>{d.drugName}</span>
+                    <span className="text-gray-500">{d.frequency}/day</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </SectionCard>
         </div>
       </div>
     </main>
