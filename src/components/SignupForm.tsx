@@ -16,11 +16,13 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
         username: '',
         password: '',
         confirmPassword: '',
-        name: '',
         email: '',
-        gender: 'MALE',
-        phone: '',
-        countryCode: '+966', // Default to Saudi Arabia for example
+        patient: {
+            name: '',
+            gender: 'MALE',
+            phone: '',
+            countryCode: '+966', // Default to Saudi Arabia for example
+        }
     });
 
     const [passwordTouched, setPasswordTouched] = useState(false);
@@ -28,8 +30,24 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+
+        if (['name', 'phone', 'countryCode', 'gender'].includes(name)) {
+            setFormData((prev) => ({
+                ...prev,
+                patient: {
+                    ...prev.patient,
+                    [name]: value,
+                },
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+        }
     };
+
 
     const validatePassword = (password: string) => {
         return {
@@ -51,9 +69,13 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
 
         const payload = {
             ...formData,
-            phoneNumber:formData.countryCode+formData.phone,
+            patient: {
+                ...formData.patient,
+                phoneNumber: formData.patient.countryCode + formData.patient.phone,
+            },
             role: 'PATIENT',
         };
+
 
         try {
             await signupUser(payload);
@@ -72,7 +94,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
             <LabeledInput
                 label={t('fullName')}
                 name="name"
-                value={formData.name}
+                value={formData.patient.name}
                 onChange={handleChange}
                 placeholder={t('fullName')}
                 inputClassName="py-1.5 text-sm"
@@ -93,7 +115,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
                 <div className="flex">
                     <select
                         name="countryCode"
-                        value={formData.countryCode}
+                        value={formData.patient.countryCode}
                         onChange={handleChange}
                         className="px-2 py-1.5 text-sm border border-gray-300 rounded-l-md bg-white"
                     >
@@ -107,7 +129,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
                     <input
                         type="tel"
                         name="phone"
-                        value={formData.phone}
+                        value={formData.patient.phone}
                         onChange={handleChange}
                         placeholder={t('phone')}
                         className="flex-1 px-4 py-1.5 text-sm border border-l-0 border-gray-300 rounded-r-md focus:ring-2 focus:ring-blue-500"
@@ -158,7 +180,7 @@ const SignupForm: React.FC<Props> = ({ onSwitch }) => {
                 <label className="text-sm font-medium mb-1">{t('gender')}</label>
                 <select
                     name="gender"
-                    value={formData.gender}
+                    value={formData.patient.gender}
                     onChange={handleChange}
                     className="w-full px-4 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                 >
