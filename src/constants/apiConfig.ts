@@ -18,5 +18,5 @@ export const API_ENDPOINTS = {
   todayAppointmentsByDoctor: (id: number | string) => `/appointments/doctor/${id}/today-visits`,
   doctorPatients: (id: number | string) => `/appointments/doctor/${id}/patients`,
   doctorSchedules: (id: number | string) => `/doctors/${id}/schedules`,
-
+  patient: (id:number | string) => `/patients/${id}`
 };

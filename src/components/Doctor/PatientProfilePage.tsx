@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 import { SectionCard } from './SectionCard';
 import { PatientHeader } from './PatientHeader';
 import FileListCard from './FileListCard';
+import colors from "tailwindcss/colors";
+import {COLORS} from "../../constants/theme";
 
 export interface AppointmentInfo {
   id: number;
@@ -45,11 +47,17 @@ const PatientProfilePage: React.FC<Props> = ({ patient }) => {
           <div className="flex flex-col md:flex-row gap-6">
             <SectionCard className="min-h-[220px]">
               <div className="text-center md:text-left">
-                <img
-                  src={patient.imageUrl || '/assets/pic.jpg'}
-                  alt="Patient Photo"
-                  className="w-24 h-24 rounded-full mx-auto md:mx-0 mb-4"
-                />
+                {patient?.imageUrl ?(
+                    <img
+                    src={patient.imageUrl }
+                    alt="Patient Photo"
+                    className="w-24 h-24 rounded-full mx-auto md:mx-0 mb-4"/>
+                ):(
+              <div className="w-24 h-24 rounded-full bg-white text-blue-700 flex items-center justify-center font-bold border-2  text-2xl"
+                style={{borderColor : COLORS.primary}}>
+                {patient?.name.charAt(0).toUpperCase()}
+              </div>
+              )}
                 <h2 className="text-lg font-semibold">{patient.name}</h2>
                 <p className="text-sm text-gray-600 mt-2">{patient.phoneNumber}</p>
               </div>
