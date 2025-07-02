@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import { COLORS } from '../../constants/theme';
+import { getColors } from '../../constants/theme';
 import RescheduleModal from './RescheduleModal';
 import { useAuth } from '../../contexts/ContextsAuth';
+import {useTheme} from "../../contexts/ThemeContext";
 
 interface AppointmentCardProps {
     id: number | string;
@@ -29,6 +30,8 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({
     const [reason, setReason] = useState('');
     const [showReschedule, setShowReschedule] = useState(false);
     const { accessToken, user } = useAuth();
+    const {mode} = useTheme();
+    const COLORS = getColors(mode);
 
     const confirmCancel = () => {
         onCancel(id, reason);

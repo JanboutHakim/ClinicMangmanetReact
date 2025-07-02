@@ -139,5 +139,11 @@
   "checkIn": "تسجيل الحضور",
   "addAppointment": "اضافة موعد",
   "appointmentPage": "صفحة الموعد",
-  "editSchedule": "تعديل الجدول"
+  "editSchedule": "تعديل الجدول",
+  "patient": "اسم المريض",
+  "doctor": "اسم الطبيب",
+  "todayVisit" : "زيارات اليوم",
+  "salamtak": "سلامتك",
+  "applyFilters": "تطبيق فلترة"
+
 }

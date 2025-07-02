@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
 import DoctorNavbar from '../../components/Doctor/DoctorNavbar';
-import DoctorSidebar from '../../components/Doctor/DoctorSidebar';
 import { PatientHeader } from '../../components/Doctor/PatientHeader';
 import { SectionCard } from '../../components/Doctor/SectionCard';
 import { useAuth } from '../../contexts/ContextsAuth';
 import { getPatientById } from '../../services/patientService';
-import { PatientInfo, DrugInfo, AppointmentInfo } from '../../components/Doctor/PatientProfilePage';
+import { PatientInfo, AppointmentInfo } from '../../components/Doctor/PatientProfilePage';
 
 interface LocationState { appointment: AppointmentInfo; }
 

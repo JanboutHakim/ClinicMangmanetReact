@@ -27,9 +27,9 @@ const DoctorPatientTable: React.FC<Props> = ({ data }) => {
 
     return (
         <div className="overflow-x-auto bg-white rounded-lg shadow">
-            <table className="min-w-full text-sm text-left text-gray-800">
+            <table className="min-w-full text-sm text-gray-800">
                 <thead className="bg-gray-100 uppercase text-xs text-gray-600">
-                <tr>
+                <tr className="ltr:text-left rtl:text-right">
                     <th className="px-6 py-3">#</th>
                     <th className="px-6 py-3">{t('name')}</th>
                     <th className="px-6 py-3">{t('phone')}</th>
@@ -38,7 +38,11 @@ const DoctorPatientTable: React.FC<Props> = ({ data }) => {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                 {data.map((patient, index) => (
-                    <tr key={patient.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => navigate(`/doctor-home/patient/${patient.id}`)}>
+                    <tr
+                        key={patient.id}
+                        className="hover:bg-gray-50 cursor-pointer ltr:text-left rtl:text-right"
+                        onClick={() => navigate(`/doctor-home/patient/${patient.id}`)}
+                    >
                         <td className="px-6 py-4 font-medium">{index + 1}</td>
                         <td className="px-6 py-4">{patient.name}</td>
                         <td className="px-6 py-4">{patient.phoneNumber}</td>

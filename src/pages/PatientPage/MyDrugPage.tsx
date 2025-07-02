@@ -4,7 +4,8 @@ import { useAuth } from "../../contexts/ContextsAuth";
 import { useTranslation } from "react-i18next";
 import { getPatientDrugs } from '../../services/drugService';
 import { useNavigate } from 'react-router-dom';
-import { COLORS } from '../../constants/theme';
+import { getColors } from '../../constants/theme';
+import {useTheme} from "../../contexts/ThemeContext";
 
 interface MyDrug {
     id: number;
@@ -23,6 +24,8 @@ function MyDrugPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [drugs, setDrugs] = useState<MyDrug[]>([]);
+    const {mode} = useTheme();
+    const COLORS = getColors(mode);
 
     useEffect(() => {
         if (!user) return;

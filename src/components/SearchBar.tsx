@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { COLORS } from '../constants/theme';
-import { useNavigate } from 'react-router-dom'; // ✅ Import navigate
+import { getColors } from '../constants/theme';
+import { useNavigate } from 'react-router-dom';
+import {useTheme} from "../contexts/ThemeContext";
 
 interface SearchBarProps {
     className?: string;
@@ -19,6 +20,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const { t } = useTranslation();
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
+    const {mode} = useTheme();
+    const COLORS = getColors(mode);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

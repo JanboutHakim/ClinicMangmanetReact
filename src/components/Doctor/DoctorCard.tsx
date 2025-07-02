@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDoctor, getAvailableSlots } from '../../services/doctorService';
+import { getAvailableSlots } from '../../services/doctorService';
 import dayjs from "dayjs";
 
 interface DoctorData {
@@ -18,18 +18,13 @@ interface GroupedSlots {
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const DoctorCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
+const DoctorCard: React.FC<{ doctor: DoctorData }> = ({ doctor }) => {
     const navigate = useNavigate();
-    const [doctor, setDoctor] = useState<DoctorData | null>(null);
     const [slots, setSlots] = useState<GroupedSlots[]>([]);
     const [showAll, setShowAll] = useState(false);
 
     useEffect(() => {
-        getDoctor(doctorId)
-            .then(setDoctor)
-            .catch((err) => console.error('Doctor fetch error:', err));
-
-        getAvailableSlots(doctorId)
+        getAvailableSlots(doctor.id.toString())
             .then((res) => {
                 const rawSlots: string[] = Array.isArray(res) ? res : [];
                 const grouped: { [key: string]: string[] } = {};
@@ -48,9 +43,7 @@ const DoctorCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
                 setSlots(groupedArray);
             })
             .catch((err) => console.error('Slots fetch error:', err));
-    }, [doctorId]);
-
-    if (!doctor) return <div>Loading...</div>;
+    }, [doctor.id]);
 
     const getDayLabel = (dateStr: string) => {
         const date = new Date(dateStr);
@@ -83,7 +76,7 @@ const DoctorCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
                 <div className="text-sm text-gray-600">{doctor.address}</div>
                 <button
                     className="mt-3 bg-blue-600 text-white px-4 py-2 rounded font-semibold hover:bg-blue-700 transition"
-                    onClick={() => navigate(`/book/${doctorId}`)}
+                    onClick={() => navigate(`/book/${doctor.id}`)}
                 >
                     Book Appointment
                 </button>
@@ -102,7 +95,7 @@ const DoctorCard: React.FC<{ doctorId: string }> = ({ doctorId }) => {
                                     <div
                                         key={i}
                                         onClick={() =>
-                                            navigate(`/book/${doctorId}/confirm?slot=${slot.date}T${time}`)
+                                            navigate(`/book/${doctor.id}/confirm?slot=${slot.date}T${time}`)
                                         }
                                         className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded mb-1 cursor-pointer hover:bg-blue-200"
                                     >

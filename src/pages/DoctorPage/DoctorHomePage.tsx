@@ -23,6 +23,10 @@ import {
     deleteHoliday,
 } from "../../services/doctorService";
 import DoctorHolidayTable, {HolidayEntry} from "../../components/Doctor/DoctorHolidayTable";
+import HolidayModal from "../../components/Doctor/HolidayModal";
+import Button from "../../components/Button";
+import {useTheme} from "../../contexts/ThemeContext";
+import {getColors} from "../../constants/theme";
 
 const DoctorDashboard: React.FC = () => {
     const { t } = useTranslation();
@@ -40,7 +44,11 @@ const DoctorDashboard: React.FC = () => {
     const [cancelReason, setCancelReason] = useState('');
     const [selectedApptId, setSelectedApptId] = useState<number | null>(null);
     const [showScheduleModal, setShowScheduleModal] = useState(false);
+    const [showHolidayModal, setshowHolidayModal] = useState(false);
     const [editEntry, setEditEntry] = useState<ScheduleEntry | null>(null);
+    const [showModal, setShowModal] = useState(false);
+    const {mode} = useTheme();
+    const COLORS = getColors(mode);
 
 
     useEffect(() => {
@@ -135,8 +143,13 @@ const DoctorDashboard: React.FC = () => {
 
     const handleAddHoliday = async (entry: HolidayEntry) => {
         if (!user || !accessToken) return;
+        const formattedSchedule: HolidayEntry = {
+            ...entry,
+            startTime: entry.startTime ? `${entry.startTime}:00` : undefined,
+            endTime: entry.endTime ? `${entry.endTime}:00` : undefined,
+        };
         try {
-            await addHolidayApi(user.id, entry, accessToken);
+            await addHolidayApi(user.id, formattedSchedule, accessToken);
             setHoliday((prev) => [...prev, entry]);
         } catch (err) {
             console.error('❌ Failed to add holiday:', err);
@@ -145,8 +158,13 @@ const DoctorDashboard: React.FC = () => {
 
     const handleUpdateHoliday = async (entry: HolidayEntry) => {
         if (!user || !accessToken || !entry.id) return;
+        const formattedSchedule: HolidayEntry = {
+            ...entry,
+            startTime: entry.startTime ? `${entry.startTime}:00` : undefined,
+            endTime: entry.endTime ? `${entry.endTime}:00` : undefined,
+        };
         try {
-            await updateHoliday(user.id, entry.id, entry, accessToken);
+            await updateHoliday(user.id, entry.id, formattedSchedule, accessToken);
             setHoliday((prev) => prev.map((h) => (h.id === entry.id ? { ...h, ...entry } : h)));
         } catch (err) {
             console.error('❌ Failed to update holiday:', err);
@@ -163,7 +181,7 @@ const DoctorDashboard: React.FC = () => {
         }
     };
 
-    const openAddSchedule = (holiday = false) => {
+    const openAddSchedule = () => {
         setEditEntry(holiday ? { dayOfWeek: '', isHoliday: true } as ScheduleEntry : null);
         setShowScheduleModal(true);
     };
@@ -255,6 +273,11 @@ const DoctorDashboard: React.FC = () => {
         }
     };
 
+    const openAdd = () => {
+        setEditEntry(null);
+        setShowModal(true);
+    };
+
 
     const renderSection = () => {
         switch (section) {
@@ -308,14 +331,26 @@ const DoctorDashboard: React.FC = () => {
                         onDelete={handleDeleteHoliday}
                     />
                     <div className="p-12"></div>
-                    {/* Buttons */}
-                    <div className="flex justify-end gap-4">
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow text-sm"
-                                onClick={openAddSchedule}
-                        >
-                            {t("AddSchedule")}
-                        </button>
+                    <div className="fixed bottom-6 ltr:right-6 rtl:left-6 z-50 flex gap-4">
+                        <Button color="red" onClick={openAdd}>
+                            {t('AddHoliday')}
+                        </Button>
+
+                        <Button color="blue" onClick={openAddSchedule}>
+                            {t('AddSchedule')}
+                        </Button>
                     </div>
+
+
+
+                    {showModal && (
+                        <HolidayModal
+                            initialEntry={editEntry ?? undefined}
+                            onSubmit={handleAddHoliday}
+                            onClose={() => setShowModal(false)}
+                        />
+                    )}
+
                     {showScheduleModal && (
                         <ScheduleModal
                             initialEntry={editEntry ?? undefined}
@@ -323,6 +358,7 @@ const DoctorDashboard: React.FC = () => {
                             onClose={() => setShowScheduleModal(false)}
                         />
                     )}
+
                 </>);
             default:
                 return <h1 className="text-2xl font-bold">{t('overview')}</h1>;
@@ -330,7 +366,8 @@ const DoctorDashboard: React.FC = () => {
     };
 
     return (<>
-        <div className="min-h-screen flex flex-col bg-gray-50 font-sans">
+        <div className="min-h-screen flex flex-col bg-gray-50 font-sans"
+        style={{backgroundColor:COLORS.background}}>
             {/* Top Navbar */}
             <div className="w-full h-16">
                 <DoctorNavbar selected={section} onSelect={setSection} />

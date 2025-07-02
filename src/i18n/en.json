@@ -141,7 +141,12 @@
   "addAppointment": "Add Appointment",
   "appointmentPage": "Appointment Page",
   "update": "Update",
-  "editSchedule": "Edit Schedule"
+  "editSchedule": "Edit Schedule",
+  "patient": "Patient",
+  "doctor": "Doctor",
+  "todayVisit" : "Today Visits",
+  "salamtak": "Salamtak",
+  "applyFilters": "Apply Filters"
 
 
 

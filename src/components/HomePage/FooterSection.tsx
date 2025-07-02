@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { COLORS } from '../../constants/theme';
+import { getColors } from '../../constants/theme';
 import {
     logo,
     appStoreIcon,
@@ -9,9 +9,12 @@ import {
     instagramIcon,
     youtubeIcon,
 } from '../../constants/assets';
+import {useTheme} from "../../contexts/ThemeContext";
 
 const Footer: React.FC = () => {
     const { t } = useTranslation();
+    const {mode} = useTheme();
+    const COLORS = getColors(mode);
 
     return (
         <footer className="bg-white border-t py-10 px-6">

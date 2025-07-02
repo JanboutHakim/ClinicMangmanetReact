@@ -4,7 +4,8 @@ import { SectionCard } from './SectionCard';
 import { PatientHeader } from './PatientHeader';
 import FileListCard from './FileListCard';
 import colors from "tailwindcss/colors";
-import {COLORS} from "../../constants/theme";
+import {getColors} from "../../constants/theme";
+import {useTheme} from "../../contexts/ThemeContext";
 
 export interface AppointmentInfo {
   id: number;
@@ -44,6 +45,8 @@ interface Props {
 }
 
 const PatientProfilePage: React.FC<Props> = ({ patient, drugs }) => {
+  const {mode} = useTheme();
+  const COLORS = getColors(mode);
   if (!patient) {
     return <main className="p-6">Loading...</main>;
   }

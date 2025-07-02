@@ -17,6 +17,7 @@ import AddDrugPage from './pages/PatientPage/AddDrugPage';
 import VerifyOtpPage from './pages/VerifyOtpPage';
 import MyDrugPage from "./pages/PatientPage/MyDrugPage";
 import DoctorHomePage from "./pages/DoctorPage/DoctorHomePage";
+import HelpCenterPage from "./pages/HelpCenterPage";
 
 const App: React.FC = () => {
     const { accessToken, refreshToken, login, logout } = useAuth();
@@ -49,6 +50,7 @@ const App: React.FC = () => {
             <Route path="/doctor-home" element={<DoctorHomePage/>}/>
             <Route path="/doctor-home/patient/:id" element={<DoctorPatientPage />} />
             <Route path="/doctor-home/appointment/:id" element={<DoctorAppointmentPage />} />
+            <Route path="/help-center" element={<HelpCenterPage />}/>
         </Routes>
     </Router>
     );

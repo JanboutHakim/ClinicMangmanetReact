@@ -2,13 +2,16 @@ import React, {useState} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/ContextsAuth';
-import { COLORS } from '../constants/theme';
+import { getColors } from '../constants/theme';
 import { logo } from '../constants/assets';
+import {useTheme} from "../contexts/ThemeContext";
 
 const Navbar: React.FC = () => {
     const { user } = useAuth();
     const { t, i18n } = useTranslation();
     const [imageError, setImageError] = useState(false);
+    const {mode} = useTheme();
+    const COLORS = getColors(mode);
 
 
     const toggleLang = () => {
@@ -28,7 +31,7 @@ const Navbar: React.FC = () => {
                 style={{ color: COLORS.primary }}>
                     {t('provider')}
                 </button>
-                <a href="#" className="hover:underline">
+                <a href="/help-center" className="hover:underline">
                     {t('help')}
                 </a>
                 {!user && (

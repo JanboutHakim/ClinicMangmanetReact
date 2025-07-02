@@ -40,7 +40,6 @@ const BookingPage: React.FC = () => {
         if (!user || !doctorId || !selectedSlot) return;
 
         const startTime = dayjs(selectedSlot).format('YYYY-MM-DDTHH:mm:ss');
-        console.log(startTime)
         const body = {
             patientId: user.id,
             doctorId: Number(doctorId),

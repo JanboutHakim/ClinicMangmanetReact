@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/ContextsAuth';
 import { addDrugToPatient } from '../../services/drugService';
-import { COLORS } from '../../constants/theme';
+import { getColors } from '../../constants/theme';
+import {useTheme} from "../../contexts/ThemeContext";
 
 const AddDrugPage: React.FC = () => {
     const { t, i18n } = useTranslation();
@@ -16,6 +17,8 @@ const AddDrugPage: React.FC = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [dosage, setDosage] = useState('');
+    const {mode} = useTheme();
+    const COLORS = getColors(mode);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

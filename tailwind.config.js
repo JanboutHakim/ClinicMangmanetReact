@@ -8,7 +8,9 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {fontFamily: {
+        sans: ['Tajawal', 'sans-serif'], // set default sans to Cairo
+      },},
   },
   plugins: [
   ],

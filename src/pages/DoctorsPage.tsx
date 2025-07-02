@@ -19,11 +19,13 @@ const DoctorsPage: React.FC = () => {
     const [search, setSearch] = useState('');
     const [specialtyFilter, setSpecialtyFilter] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(false);
     const { accessToken } = useAuth();
     const { t } = useTranslation();
 
     useEffect(() => {
         const fetchDoctorsData = async () => {
+            setLoading(true);
             try {
                 const data = await getDoctors(search, specialtyFilter, accessToken!);
                 const doctorsArray = Array.isArray(data) ? data : data?.doctors || [];
@@ -32,6 +34,8 @@ const DoctorsPage: React.FC = () => {
             } catch (err) {
                 console.error('Failed to fetch doctors:', err);
                 setDoctors([]);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -72,11 +76,21 @@ const DoctorsPage: React.FC = () => {
                     </select>
                 </div>
 
-                <div className="space-y-4">
-                    {paginatedDoctors.map((doc) => (
-                        <DoctorCard key={doc.id} doctorId={doc.id.toString()} />
-                    ))}
-                </div>
+                {loading ? (
+                    <p className="text-center text-gray-500">
+                        {t('loadingDoctors') || 'Loading doctors...'}
+                    </p>
+                ) : paginatedDoctors.length > 0 ? (
+                    <div className="space-y-4">
+                        {paginatedDoctors.map((doc) => (
+                            <DoctorCard doctor={doc}   />
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-center text-gray-500">
+                        {t('noDoctorsFound') || 'No doctors found.'}
+                    </p>
+                )}
 
                 {totalPages > 1 && (
                     <div className="flex justify-center items-center gap-2 mt-4">

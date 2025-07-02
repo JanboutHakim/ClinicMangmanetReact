@@ -6,7 +6,8 @@ import { getDoctor } from '../services/doctorService';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AppointmentCard from "../components/Appointments/AppointmentCard";
-import {COLORS} from "../constants/theme";
+import {getColors} from "../constants/theme";
+import {useTheme} from "../contexts/ThemeContext";
 
 interface Appointment {
     id: number | string;
@@ -28,6 +29,8 @@ const AppointmentsPage: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const {mode} = useTheme();
+    const COLORS = getColors(mode);
 
     useEffect(() => {
         if (!user) return;

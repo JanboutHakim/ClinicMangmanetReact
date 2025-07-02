@@ -1,10 +1,11 @@
 import { useAuth } from "../../contexts/ContextsAuth";
 import { useTranslation } from "react-i18next";
-import { COLORS } from "../../constants/theme";
+import { getColors } from "../../constants/theme";
 import SearchBar from "../SearchBar";
 import { useState, useEffect } from "react";
 import { getDoctors } from '../../services/doctorService';
 import DoctorList from "../Doctor/DoctorList";
+import {useTheme} from "../../contexts/ThemeContext";
 
 interface Doctor {
     id: number;
@@ -21,6 +22,8 @@ const FirstSection = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [results, setResults] = useState<Doctor[]>([]);
     const [focused, setFocused] = useState(false);
+    const {mode} = useTheme();
+    const COLORS = getColors(mode);
 
     useEffect(() => {
         const fetchDoctors = async () => {
