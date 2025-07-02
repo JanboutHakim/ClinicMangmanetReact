@@ -6,7 +6,7 @@ export const API_ENDPOINTS = {
   drugs:'/drugs',
   appointments: '/appointments',
   doctorAppointments: (id: number | string) => `/doctors/${id}/appointments`,
-  doctor: (id: number | string) => `/doctors/${id}`,
+  doctor: (id: number | string) => `/appointments/doctor-information/${id}`,
   availableSlots: (id: number | string) => `/appointments/doctor/${id}/available-slots`,
   patientAppointments: (
     id: number | string,

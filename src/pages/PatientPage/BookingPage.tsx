@@ -12,6 +12,7 @@ interface DoctorData {
     clinicName: string;
     address: string;
     specialization: string[];
+    services?: { services: string | null }[];
     imageUrl?: string;
 }
 
@@ -25,15 +26,26 @@ const BookingPage: React.FC = () => {
     const selectedSlot = new URLSearchParams(location.search).get('slot') || '';
 
     const [doctor, setDoctor] = useState<DoctorData | null>(null);
+    const [services, setServices] = useState<string[]>([]);
     const [reason, setReason] = useState('');
     const [notes, setNotes] = useState('');
 
     useEffect(() => {
         if (!doctorId) return;
         getDoctor(doctorId, accessToken!)
-            .then(setDoctor)
+            .then((doc) => {
+                setDoctor(doc);
+                const list = doc?.services?.map((s: any) => s.services).filter(Boolean) || [];
+                setServices(list);
+            })
             .catch((err) => console.error(err));
     }, [doctorId, accessToken]);
+
+    useEffect(() => {
+        if (services.length > 0 && !reason) {
+            setReason(services[0]);
+        }
+    }, [services, reason]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -72,13 +84,22 @@ const BookingPage: React.FC = () => {
                         <label htmlFor="reason" className="block text-sm font-medium mb-1">
                             {t('reasonLabel')}
                         </label>
-                        <input
+                        <select
                             id="reason"
                             required
                             className="w-full border rounded p-2"
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
-                        />
+                        >
+                            <option value="" disabled>
+                                {services.length > 0 ? 'Select reason' : 'No services available'}
+                            </option>
+                            {services.map((s, idx) => (
+                                <option key={idx} value={s}>
+                                    {s}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div>
                         <label htmlFor="notes" className="block text-sm font-medium mb-1">
