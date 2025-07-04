@@ -1,4 +1,4 @@
-export { default as logo } from '../assets/logo.png';
+export { default as logo } from '../assets/logo.svg';
 export { default as signupBg } from '../assets/signup-bg.jpg';
 export { default as appStoreIcon } from '../assets/appstore.svg';
 export { default as googlePlayIcon } from '../assets/googleplay.svg';
@@ -13,3 +13,4 @@ export { default as doctor1 } from '../assets/doctor1.png';
 export { default as doctor2 } from '../assets/doctor2.png';
 export { default as doctor3 } from '../assets/doctor3.png';
 export { default as reactLogo } from '../assets/react.svg';
+export {default as flag} from '../assets/flag.jpg'
