@@ -1,7 +1,7 @@
 import api from './api';
 import { API_ENDPOINTS } from '../constants/apiConfig';
-import {ScheduleEntry} from "../components/Doctor/DoctorScheduleTable";
-import {HolidayEntry} from "../components/Doctor/DoctorHolidayTable";
+import { ScheduleEntry } from '../components/Doctor/DoctorScheduleTable';
+import { HolidayEntry } from '../components/Doctor/DoctorHolidayTable';
 
 export const getDoctors = async (search?: string, specialty?: string, token?: string) => {
   const params = new URLSearchParams();
@@ -91,3 +91,55 @@ export const deleteHoliday = async (
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
   });
 };
+
+export interface DoctorServiceEntry {
+  doctorId: number;
+  id: number;
+  services: string;
+}
+
+export const getServiceOptions = async (token?: string) => {
+  const res = await api.get(API_ENDPOINTS.doctorServicesList, token
+    ? { headers: { Authorization: `Bearer ${token}` } }
+    : undefined);
+  return res.data;
+};
+
+export const getDoctorServices = async (
+  doctorId: number | string,
+  token?: string
+) => {
+  const res = await api.get(API_ENDPOINTS.doctorServices(doctorId), token
+    ? { headers: { Authorization: `Bearer ${token}` } }
+    : undefined);
+  return res.data;
+};
+
+export const addDoctorService = async (
+  doctorId: number | string,
+  payload: DoctorServiceEntry,
+  token?: string
+) => {
+  await api.post(API_ENDPOINTS.doctorServices(doctorId), payload, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+};
+
+export const updateDoctorService = async (
+  doctorId: number | string,
+  payload: DoctorServiceEntry,
+  token?: string
+) => {
+  await api.put(API_ENDPOINTS.doctorServices(doctorId), payload, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+};
+
+export const deleteDoctorService = async (
+  doctorId: number | string,
+  serviceId: number | string,
+  token?: string
+) => {
+  await api.delete(API_ENDPOINTS.doctorService(doctorId, serviceId), {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });};

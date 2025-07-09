@@ -144,6 +144,10 @@
   "doctor": "اسم الطبيب",
   "todayVisit" : "زيارات اليوم",
   "salamtak": "سلامتك",
-  "applyFilters": "تطبيق فلترة"
+  "applyFilters": "تطبيق فلترة",
+  "servicesTab": "الخدمات",
+  "addService": "اضافة خدمة",
+  "editService": "تعديل الخدمة",
+  "service": "الخدمة"
 
 }

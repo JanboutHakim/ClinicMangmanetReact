@@ -14,6 +14,8 @@ import api from "../../services/api";
 import DoctorSidebar from "../../components/Doctor/DoctorSidebar";
 import DoctorScheduleTable, {ScheduleEntry} from "../../components/Doctor/DoctorScheduleTable";
 import ScheduleModal from "../../components/Doctor/ScheduleModal";
+import DoctorServicesTable, { ServiceEntry } from "../../components/Doctor/DoctorServicesTable";
+import ServiceModal from "../../components/Doctor/ServiceModal";
 import {
     handleAddSchedules,
     updateSchedule,
@@ -21,6 +23,11 @@ import {
     handleAddHoliday as addHolidayApi,
     updateHoliday,
     deleteHoliday,
+    getServiceOptions,
+    getDoctorServices,
+    addDoctorService,
+    updateDoctorService,
+    deleteDoctorService,
 } from "../../services/doctorService";
 import DoctorHolidayTable, {HolidayEntry} from "../../components/Doctor/DoctorHolidayTable";
 import HolidayModal from "../../components/Doctor/HolidayModal";
@@ -39,6 +46,8 @@ const DoctorDashboard: React.FC = () => {
     const [patients,setPatients] = useState<Patient[]>([]);
     const [schedules,setSchedules] = useState<ScheduleEntry[]>([]);
     const [holiday,setHoliday] = useState<HolidayEntry[]>([]);
+    const [servicesList, setServicesList] = useState<ServiceEntry[]>([]);
+    const [serviceOptions, setServiceOptions] = useState<string[]>([]);
     const [statusFilter, setStatusFilter] = useState('');
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [cancelReason, setCancelReason] = useState('');
@@ -47,6 +56,8 @@ const DoctorDashboard: React.FC = () => {
     const [showHolidayModal, setshowHolidayModal] = useState(false);
     const [editEntry, setEditEntry] = useState<ScheduleEntry | null>(null);
     const [showModal, setShowModal] = useState(false);
+    const [showServiceModal, setShowServiceModal] = useState(false);
+    const [editService, setEditService] = useState<ServiceEntry | null>(null);
     const {mode} = useTheme();
     const COLORS = getColors(mode);
 
@@ -95,6 +106,16 @@ const DoctorDashboard: React.FC = () => {
             })
             .then((res) => setHoliday(res.data))
             .catch((err) => console.error('Holiday fetch error:', err));
+    }, [user, accessToken]);
+
+    useEffect(() => {
+        if (!user) return;
+        getServiceOptions(accessToken)
+            .then(setServiceOptions)
+            .catch((err) => console.error('Service options fetch error:', err));
+        getDoctorServices(user.id, accessToken)
+            .then(setServicesList)
+            .catch((err) => console.error('Doctor services fetch error:', err));
     }, [user, accessToken]);
 
     const handleAddSchedule = async (newSchedule: ScheduleEntry) => {
@@ -178,6 +199,45 @@ const DoctorDashboard: React.FC = () => {
             setHoliday((prev) => prev.filter((h) => h.id !== holidayId));
         } catch (err) {
             console.error('❌ Failed to delete holiday:', err);
+        }
+    };
+
+    const openAddService = () => {
+        setEditService(null);
+        setShowServiceModal(true);
+    };
+
+    const openEditService = (entry: ServiceEntry) => {
+        setEditService(entry);
+        setShowServiceModal(true);
+    };
+
+    const handleServiceSubmit = async (entry: ServiceEntry) => {
+        if (!user || !accessToken) return;
+        if (editService && editService.id) {
+            try {
+                await updateDoctorService(user.id, { ...entry, id: editService.id, doctorId: user.id }, accessToken);
+                setServicesList((prev) => prev.map((s) => (s.id === editService.id ? { ...s, services: entry.services } : s)));
+            } catch (err) {
+                console.error('❌ Failed to update service:', err);
+            }
+        } else {
+            try {
+                await addDoctorService(user.id, { ...entry, doctorId: user.id }, accessToken);
+                setServicesList((prev) => [...prev, { ...entry, doctorId: user.id }]);
+            } catch (err) {
+                console.error('❌ Failed to add service:', err);
+            }
+        }
+    };
+
+    const handleDeleteService = async (serviceId: number) => {
+        if (!user || !accessToken) return;
+        try {
+            await deleteDoctorService(user.id, serviceId, accessToken);
+            setServicesList((prev) => prev.filter((s) => s.id !== serviceId));
+        } catch (err) {
+            console.error('❌ Failed to delete service:', err);
         }
     };
 
@@ -313,6 +373,32 @@ const DoctorDashboard: React.FC = () => {
                                           onNoShow={handleNoShow}
                                           onRowClick={(a) => navigate(`/doctor-home/appointment/${a.id}`, { state: { appointment: a } })}
                         />
+                    </>
+                );
+            case 'services':
+                return (
+                    <>
+                        <h1 className="text-2xl font-bold mb-4">{t('servicesTab')}</h1>
+                        <DoctorServicesTable
+                            data={servicesList}
+                            onEdit={openEditService}
+                            onDelete={handleDeleteService}
+                        />
+                        <div className="p-12"></div>
+                        <div className="fixed bottom-6 ltr:right-6 rtl:left-6 z-50">
+                            <Button color="blue" onClick={openAddService}>
+                                {t('addService')}
+                            </Button>
+                        </div>
+
+                        {showServiceModal && (
+                            <ServiceModal
+                                options={serviceOptions}
+                                initialEntry={editService ?? undefined}
+                                onSubmit={handleServiceSubmit}
+                                onClose={() => setShowServiceModal(false)}
+                            />
+                        )}
                     </>
                 );
             case 'schedules'  :
