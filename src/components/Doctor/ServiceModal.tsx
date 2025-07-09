@@ -12,10 +12,12 @@ interface Props {
 const ServiceModal: React.FC<Props> = ({ options, initialEntry, onSubmit, onClose }) => {
   const { t } = useTranslation();
   const [service, setService] = useState('');
+  const [price, setPrice] = useState(0);
 
   useEffect(() => {
     if (initialEntry) {
-      setService(initialEntry.services);
+      setService(initialEntry.service);
+      setPrice(initialEntry.price);
     } else if (options.length > 0) {
       setService(options[0]);
     }
@@ -26,7 +28,8 @@ const ServiceModal: React.FC<Props> = ({ options, initialEntry, onSubmit, onClos
     const entry: ServiceEntry = {
       doctorId: initialEntry?.doctorId ?? 0,
       id: initialEntry?.id ?? 0,
-      services: service,
+      service,
+      price,
     };
     onSubmit(entry);
     onClose();
@@ -51,6 +54,15 @@ const ServiceModal: React.FC<Props> = ({ options, initialEntry, onSubmit, onClos
               </option>
             ))}
           </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">{t('price')}</label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(parseFloat(e.target.value))}
+            className="w-full border px-3 py-2 rounded"
+          />
         </div>
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">

@@ -109,10 +109,10 @@ const DoctorDashboard: React.FC = () => {
 
     useEffect(() => {
         if (!user ) return;
-        getServiceOptions(accessToken)
+        getServiceOptions(accessToken ?? undefined)
             .then(setServiceOptions)
             .catch((err) => console.error('Service options fetch error:', err));
-        getDoctorServices(user.id, accessToken)
+        getDoctorServices(user.id, accessToken ?? undefined)
             .then(setServicesList)
             .catch((err) => console.error('Doctor services fetch error:', err));
     }, [user, accessToken]);
@@ -216,7 +216,7 @@ const DoctorDashboard: React.FC = () => {
         if (editService && editService.id) {
             try {
                 await updateDoctorService(user.id, { ...entry, id: editService.id, doctorId: user.id }, accessToken);
-                setServicesList((prev) => prev.map((s) => (s.id === editService.id ? { ...s, services: entry.service } : s)));
+                setServicesList((prev) => prev.map((s) => (s.id === editService.id ? { ...s, service: entry.service, price: entry.price } : s)));
             } catch (err) {
                 console.error('❌ Failed to update service:', err);
             }

@@ -5,6 +5,7 @@ export interface ServiceEntry {
   doctorId: number;
   id: number;
   service: string;
+  price: number;
 }
 
 interface Props {
@@ -23,6 +24,7 @@ const DoctorServicesTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
           <tr className="ltr:text-left rtl:text-right">
             <th className="px-6 py-3">#</th>
             <th className="px-6 py-3">{t('service')}</th>
+            <th className="px-6 py-3">{t('price')}</th>
             <th className="px-6 py-3">{t('actions')}</th>
           </tr>
         </thead>
@@ -31,6 +33,7 @@ const DoctorServicesTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
             <tr key={entry.id} className="hover:bg-tableHover ltr:text-left rtl:text-right">
               <td className="px-6 py-4 font-medium">{idx + 1}</td>
               <td className="px-6 py-4 ">{entry.service}</td>
+              <td className="px-6 py-4 ">{entry.price}</td>
               <td className="px-6 py-4 flex gap-2 rtl:space-x-reverse">
                 <button onClick={() => onEdit(entry)} className="text-blue-600 hover:underline">
                   {t('edit')}
