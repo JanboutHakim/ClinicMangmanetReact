@@ -39,8 +39,7 @@ const DoctorDashboard: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [section, setSection] = useState('appointments');
-    const { user, accessToken,refreshToken } = useAuth();
-    console.log(refreshToken)
+    const { user, accessToken } = useAuth();
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [todayAppointments,setTodayAppointments] = useState<Appointment[]>([]);
     const [patients,setPatients] = useState<Patient[]>([]);
@@ -109,7 +108,7 @@ const DoctorDashboard: React.FC = () => {
     }, [user, accessToken]);
 
     useEffect(() => {
-        if (!user) return;
+        if (!user ) return;
         getServiceOptions(accessToken)
             .then(setServiceOptions)
             .catch((err) => console.error('Service options fetch error:', err));
@@ -217,7 +216,7 @@ const DoctorDashboard: React.FC = () => {
         if (editService && editService.id) {
             try {
                 await updateDoctorService(user.id, { ...entry, id: editService.id, doctorId: user.id }, accessToken);
-                setServicesList((prev) => prev.map((s) => (s.id === editService.id ? { ...s, services: entry.services } : s)));
+                setServicesList((prev) => prev.map((s) => (s.id === editService.id ? { ...s, services: entry.service } : s)));
             } catch (err) {
                 console.error('❌ Failed to update service:', err);
             }

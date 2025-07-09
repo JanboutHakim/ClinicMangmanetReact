@@ -95,7 +95,7 @@ export const deleteHoliday = async (
 export interface DoctorServiceEntry {
   doctorId: number;
   id: number;
-  services: string;
+  service: string;
 }
 
 export const getServiceOptions = async (token?: string) => {

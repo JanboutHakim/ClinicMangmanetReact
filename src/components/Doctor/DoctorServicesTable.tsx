@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 export interface ServiceEntry {
   doctorId: number;
   id: number;
-  services: string;
+  service: string;
 }
 
 interface Props {
@@ -30,7 +30,7 @@ const DoctorServicesTable: React.FC<Props> = ({ data, onEdit, onDelete }) => {
           {data.map((entry, idx) => (
             <tr key={entry.id} className="hover:bg-tableHover ltr:text-left rtl:text-right">
               <td className="px-6 py-4 font-medium">{idx + 1}</td>
-              <td className="px-6 py-4">{entry.services}</td>
+              <td className="px-6 py-4 ">{entry.service}</td>
               <td className="px-6 py-4 flex gap-2 rtl:space-x-reverse">
                 <button onClick={() => onEdit(entry)} className="text-blue-600 hover:underline">
                   {t('edit')}

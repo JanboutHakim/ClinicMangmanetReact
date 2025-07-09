@@ -1,7 +1,7 @@
 export const getColors = (mode: 'light' | 'dark') => ({
-    primary: mode === 'dark' ? '#99BFCG' : '#558D97',     // Vibrant green
-    secondary: mode === 'dark' ? '#558D97' : '#99BFC6',  // Deeper green
-    background: mode === 'dark' ? '#3D6176' : '#C4DDDE', // Dark: greenish black; Light: mint background
+    primary: mode === 'dark' ? '#37500F' : '#6478FF',     // Vibrant green
+    secondary: mode === 'dark' ? '#C8F05B' : '#C8F05B',  // Deeper green
+    background: mode === 'dark' ? '#F0F0F0' : '#F0F0F0', // Dark: greenish black; Light: mint background
     accent: mode === 'dark' ? '#86EFAC' : '#22C55E',     // Light green accent
     highlight: mode === 'dark' ? '#14532D' : '#BBF7D0',  // Dark: forest green; Light: soft green
     textLight: mode === 'dark' ? '#C4DDDE' : '#3D6176',  // Light text for dark bg and vice versa
