@@ -23,7 +23,7 @@ const DrugPage: React.FC = () => {
                 setCurrentPage(1);
             })
             .catch((err) => console.error('Drug fetch failed', err))
-           // .finally(() => setLoading(false));
+            .finally(() => setLoading(false));
     }, [searchQuery]);
 
     const totalPages = Math.ceil(drugs.length / ITEMS_PER_PAGE);
