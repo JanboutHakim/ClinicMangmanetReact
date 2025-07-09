@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Navbar from '../../components/Navbar';
-import { getDoctor } from '../../services/doctorService';
+import { getDoctor, getDoctorServices, DoctorServiceEntry } from '../../services/doctorService';
 import { bookAppointment } from '../../services/appointmentService';
 import { useAuth } from '../../contexts/ContextsAuth';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +26,7 @@ const BookingPage: React.FC = () => {
     const selectedSlot = new URLSearchParams(location.search).get('slot') || '';
 
     const [doctor, setDoctor] = useState<DoctorData | null>(null);
-    const [services, setServices] = useState<string[]>([]);
+    const [services, setServices] = useState<DoctorServiceEntry[]>([]);
     const [reason, setReason] = useState('');
     const [notes, setNotes] = useState('');
 
@@ -35,15 +35,20 @@ const BookingPage: React.FC = () => {
         getDoctor(doctorId, accessToken!)
             .then((doc) => {
                 setDoctor(doc);
-                const list = doc?.services?.map((s: any) => s.services).filter(Boolean) || [];
-                setServices(list);
+            })
+            .catch((err) => console.error(err));
+
+        getDoctorServices(doctorId, accessToken!)
+            .then((list) => {
+                const arr = Array.isArray(list) ? list : [];
+                setServices(arr);
             })
             .catch((err) => console.error(err));
     }, [doctorId, accessToken]);
 
     useEffect(() => {
         if (services.length > 0 && !reason) {
-            setReason(services[0]);
+            setReason(services[0].service);
         }
     }, [services, reason]);
 
@@ -94,9 +99,9 @@ const BookingPage: React.FC = () => {
                             <option value="" disabled>
                                 {services.length > 0 ? 'Select reason' : 'No services available'}
                             </option>
-                            {services.map((s, idx) => (
-                                <option key={idx} value={s}>
-                                    {s}
+                            {services.map((s) => (
+                                <option key={s.id} value={s.service}>
+                                    {s.service} - {s.price}
                                 </option>
                             ))}
                         </select>
