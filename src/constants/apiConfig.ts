@@ -21,4 +21,8 @@ export const API_ENDPOINTS = {
   doctorHoliday:(id: number | string) => `/doctors/${id}/holiday-schedules`,
   patient: (id:number | string,patientId:number |String) => `/appointments/doctor/${id}/patients/${patientId}`,
   holidaySchedule: (id: number | string) => `/doctors/${id}/holiday-schedules`,
+  doctorServicesList: '/doctors/services',
+  doctorServices: (id: number | string) => `/doctors/${id}/services`,
+  doctorService: (doctorId: number | string, serviceId: number | string) =>
+    `/doctors/${doctorId}/services/${serviceId}`,
 };

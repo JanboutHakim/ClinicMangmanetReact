@@ -146,7 +146,11 @@
   "doctor": "Doctor",
   "todayVisit" : "Today Visits",
   "salamtak": "Salamtak",
-  "applyFilters": "Apply Filters"
+  "applyFilters": "Apply Filters",
+  "servicesTab": "Services",
+  "addService": "Add Service",
+  "editService": "Edit Service",
+  "service": "Service"
 
 
 
