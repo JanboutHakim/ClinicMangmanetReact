@@ -96,6 +96,7 @@ export interface DoctorServiceEntry {
   doctorId: number;
   id: number;
   service: string;
+  price: number;
 }
 
 export const getServiceOptions = async (token?: string) => {
